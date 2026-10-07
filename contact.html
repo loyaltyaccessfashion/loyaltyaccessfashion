@@ -1,1 +1,118 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0A0A0A">
+  <title>Contact Us — Loyalty Access Fashion</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
 
+  <div class="announce">⚡ সারা দেশে ক্যাশ অন ডেলিভারি | 📞 WhatsApp: +8801601866686 | ⭐ প্রিমিয়াম কোয়ালিটি গ্যারান্টি</div>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="index.html" class="logo">
+        <span class="logo-main">LOYALTY ACCESS</span>
+        <span class="logo-sub">Luxury Lifestyle Store</span>
+      </a>
+      <nav class="main-nav" id="mainNav">
+        <a href="index.html">হোম</a>
+        <a href="shop.html">কালেকশন</a>
+        <a href="track-order.html">ট্র্যাক অর্ডার</a>
+        <a href="contact.html" class="active">যোগাযোগ</a>
+      </nav>
+      <div class="header-actions">
+        <a href="cart.html" class="cart-btn" title="কার্ট">🛍️<span class="cart-badge" id="cartCount">0</span></a>
+        <button class="menu-toggle" onclick="toggleMenu()" aria-label="Menu">☰</button>
+      </div>
+    </div>
+  </header>
+
+  <section class="container">
+    <div class="page-head">
+      <h1>যোগাযোগ <span class="text-gold">করুন</span></h1>
+      <p>যেকোনো প্রশ্ন, অর্ডার বা সাপোর্টের জন্য আমরা আছি আপনার পাশে</p>
+    </div>
+
+    <div class="contact-grid">
+      <a href="https://wa.me/8801601866686" target="_blank" class="contact-card">
+        <div class="icon">📱</div>
+        <h3>WhatsApp</h3>
+        <p>+8801601866686</p>
+        <p style="color:var(--gold); margin-top:6px;">সরাসরি মেসেজ দিন →</p>
+      </a>
+      <a href="https://facebook.com" target="_blank" class="contact-card">
+        <div class="icon">📘</div>
+        <h3>Facebook Page</h3>
+        <p>Loyalty Access Fashion</p>
+        <p style="color:var(--gold); margin-top:6px;">পেজে ভিজিট করুন →</p>
+      </a>
+      <div class="contact-card">
+        <div class="icon">✉️</div>
+        <h3>Email</h3>
+        <p>support@loyaltyaccess.com</p>
+        <p style="color:var(--muted); margin-top:6px;">২৪ ঘণ্টায় রিপ্লাই</p>
+      </div>
+    </div>
+
+    <div style="max-width:560px; margin:40px auto 0;" class="summary-box">
+      <h3>💬 সরাসরি মেসেজ পাঠান</h3>
+      <form onsubmit="sendContactMessage(event)">
+        <div class="form-group">
+          <label>আপনার নাম</label>
+          <input type="text" id="msgName" class="form-control" placeholder="আপনার নাম" required>
+        </div>
+        <div class="form-group">
+          <label>আপনার মেসেজ</label>
+          <textarea id="msgText" class="form-control" placeholder="কীভাবে সাহায্য করতে পারি?" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-gold btn-block">📱 WhatsApp-এ পাঠান</button>
+      </form>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <p class="footer-logo">LOYALTY ACCESS</p>
+        <p class="footer-tag">LUXURY LIFESTYLE STORE</p>
+        <p class="footer-desc">প্রিমিয়াম ওয়াচ, অ্যানিমে টি-শার্ট ও অ্যাস্থেটিক হোম ডেকর — সব এক জায়গায়। সারা বাংলাদেশে ক্যাশ অন ডেলিভারি।</p>
+      </div>
+      <div>
+        <h4>গুরুত্বপূর্ণ লিংক</h4>
+        <ul>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="contact.html">Contact Us</a></li>
+          <li><a href="privacy.html">Privacy Policy</a></li>
+          <li><a href="exchange.html">Exchange Policy</a></li>
+          <li><a href="track-order.html">Track Order</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>যোগাযোগ</h4>
+        <ul>
+          <li>📱 <a href="https://wa.me/8801601866686" target="_blank">WhatsApp: +8801601866686</a></li>
+          <li>📘 <a href="https://facebook.com" target="_blank">Facebook Page</a></li>
+          <li>🚚 সারা বাংলাদেশে ডেলিভারি</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2025 Loyalty Access Fashion — All Rights Reserved.</div>
+  </footer>
+
+  <script src="products.js"></script>
+  <script src="orders.js"></script>
+  <script src="main.js"></script>
+  <script>
+    function sendContactMessage(e) {
+      e.preventDefault();
+      var name = document.getElementById('msgName').value.trim();
+      var text = document.getElementById('msgText').value.trim();
+      var msg = '💬 *Contact Message — Loyalty Access*\n\n👤 নাম: ' + name + '\n📝 মেসেজ: ' + text;
+      window.open('https://wa.me/' + WHATSAPP_NUMBER + '?text=' + encodeURIComponent(msg), '_blank');
+    }
+  </script>
+</body>
+</html>
