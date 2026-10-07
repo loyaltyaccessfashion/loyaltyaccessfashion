@@ -289,3 +289,131 @@ function trackOrder() {
 
 /* ---------------- হেডার ব্যাজ সব পেজে আপডেট ---------------- */
 updateCartBadge();
+/* =========================================================
+   GIFT CARD & COUPON SYSTEM LOGIC WITH SOUND & ANIMATION
+   ========================================================= */
+
+// সচল কুপন কোড লিস্ট (আপনি চাইলে পরে আরো যোগ করতে পারেন)
+const VALID_COUPONS = {
+  'LOYALTY500': 500,  // ৫০০ টাকা ছাড়
+  'GIFT1000': 1000,   // ১০০০ টাকা ছাড়
+  'VIP2000': 2000,    // ২০০০ টাকা ছাড়
+  'LAF100': 100       // ১০০ টাকা ছাড়
+};
+
+let appliedCoupon = null;
+
+// সাউন্ড ইফেক্ট প্রসেসর (কোনো অডিও ফাইলের ল্যাগ ছাড়া কাজ করবে)
+function playCelebrationSound() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6 (Happy Chord)
+    notes.forEach((freq, i) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0.12, ctx.currentTime + i * 0.08);
+      gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + i * 0.08 + 0.35);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(ctx.currentTime + i * 0.08);
+      osc.stop(ctx.currentTime + i * 0.08 + 0.35);
+    });
+  } catch(e) {}
+}
+
+// স্ক্রিনে রঙ্গিন আতশবাজি/কনফেটি ফোটানোর অ্যানিমেশন
+function triggerConfetti() {
+  let canvas = document.getElementById('canvas-confetti');
+  if(!canvas) {
+    canvas = document.createElement('canvas');
+    canvas.id = 'canvas-confetti';
+    document.body.appendChild(canvas);
+  }
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const particles = [];
+  const colors = ['#EAB308', '#22c55e', '#3b82f6', '#ec4899', '#ffffff'];
+
+  for(let i = 0; i < 70; i++) {
+    particles.push({
+      x: canvas.width / 2,
+      y: canvas.height / 2,
+      vx: (Math.random() - 0.5) * 14,
+      vy: (Math.random() - 0.5) * 14 - 3,
+      size: Math.random() * 7 + 4,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      life: 100
+    });
+  }
+
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    let active = false;
+    particles.forEach(p => {
+      if(p.life > 0) {
+        active = true;
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += 0.2; // Gravity
+        p.life -= 2;
+        ctx.fillStyle = p.color;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    });
+    if(active) requestAnimationFrame(animate);
+    else ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+  animate();
+}
+
+// কুপন অ্যাপ্লাই করার ফাংশন
+function applyCouponCode() {
+  const input = document.getElementById('couponInput');
+  const badgeWrap = document.getElementById('couponSuccessMsg');
+  if(!input) return;
+
+  const code = input.value.trim().toUpperCase();
+  if(!code) { showToast('দয়া করে কুপন কোড লিখুন!'); return; }
+
+  if(VALID_COUPONS[code]) {
+    appliedCoupon = { code: code, discount: VALID_COUPONS[code] };
+    
+    // সাউন্ড ও অ্যানিমেশন রান করা
+    playCelebrationSound();
+    triggerConfetti();
+
+    if(badgeWrap) {
+      badgeWrap.innerHTML = `<div class="applied-success-badge">🎉 '${code}' কুপন সফলভাবে যুক্ত হয়েছে (৳${VALID_COUPONS[code]} ছাড়)!</div>`;
+    }
+
+    showToast('🎉 কুপন সফলভাবে যুক্ত হয়েছে!');
+    updateShipping(); // বিল আপডেট করা
+  } else {
+    showToast('❌ দুঃখিত! ভুল বা মেয়াদোত্তীর্ণ কুপন কোড।');
+    if(badgeWrap) badgeWrap.innerHTML = '';
+  }
+}
+
+// চেকআউটের মোট বিলে কুপন বিয়োগ করা (Overriding existing updateShipping)
+const originalUpdateShipping = updateShipping;
+updateShipping = function() {
+  const sel = document.getElementById('deliveryArea');
+  if (!sel) return;
+  const fee = sel.value === 'inside' ? DELIVERY.inside : DELIVERY.outside;
+  const subtotal = cartSubtotal();
+  
+  let discount = appliedCoupon ? appliedCoupon.discount : 0;
+  let total = (subtotal + fee) - discount;
+  if(total < 0) total = 0; // Negative বিল যেন না হয়
+
+  const s = document.getElementById('coShipping');
+  const t = document.getElementById('coTotal');
+  if (s) s.textContent = '৳ ' + fee;
+  if (t) t.textContent = '৳ ' + total + (discount > 0 ? ` (৳${discount} ছাড়)` : '');
+};
