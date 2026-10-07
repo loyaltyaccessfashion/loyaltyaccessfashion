@@ -81,39 +81,83 @@ function showToast(msg) {
   toastTimer = setTimeout(() => toast.classList.remove('show'), 2300);
 }
 
-/* ---------------- মোবাইল মেনু টগল (FIXED) ---------------- */
+/* ---------------- LUXURY MOBILE MENU JS ---------------- */
 function toggleMenu() {
   const nav = document.getElementById('mainNav');
   const btn = document.querySelector('.menu-toggle');
   
-  if (nav) {
-    nav.classList.toggle('open');
-    document.body.classList.toggle('menu-open');
+  if (!nav) return;
+
+  // প্রথমবারের জন্য মেনুটির ডিজাইন অটোমেটিক লাক্সারি কার্ডে কনভার্ট করবে
+  if (!nav.classList.contains('enhanced')) {
+    const originalLinks = Array.from(nav.querySelectorAll('a'));
     
-    // মেনু খোলা থাকলে '✕' (Close) এবং বন্ধ থাকলে '☰' দেখাবে
-    if (btn) {
-      if (nav.classList.contains('open')) {
-        btn.innerHTML = '✕';
-        btn.style.color = '#EAB308';
-      } else {
-        btn.innerHTML = '☰';
-        btn.style.color = 'inherit';
-      }
+    let linksHTML = originalLinks.map(a => {
+      const text = a.textContent.trim();
+      const href = a.getAttribute('href');
+      const isActive = a.classList.contains('active') ? 'active' : '';
+      
+      let icon = '📌';
+      if (text.includes('হোম')) icon = '🏠';
+      else if (text.includes('কালেকশন')) icon = '🛍️';
+      else if (text.includes('গিফট')) icon = '🎁';
+      else if (text.includes('ট্র্যাক')) icon = '🔍';
+      else if (text.includes('যোগাযোগ')) icon = '📞';
+
+      return `<a href="${href}" class="${isActive}">
+                <span>${icon} ${text}</span>
+                <span class="arrow-icon">➔</span>
+              </a>`;
+    }).join('');
+
+    nav.innerHTML = `
+      <div>
+        <div class="menu-header-top">
+          <div>
+            <div class="menu-brand-title">LOYALTY ACCESS</div>
+            <div style="font-size: 0.58rem; color: var(--muted); letter-spacing: 2px;">LUXURY LIFESTYLE STORE</div>
+          </div>
+          <span style="font-size:0.7rem; background:rgba(234,179,8,0.15); color:var(--gold); padding:4px 10px; border-radius:999px; border:1px solid rgba(234,179,8,0.3); font-weight:700;">VIP MENU</span>
+        </div>
+        <div class="mobile-menu-links">
+          ${linksHTML}
+        </div>
+      </div>
+
+      <div class="menu-footer-card">
+        <div style="font-size:0.85rem; font-weight:800; color:#fff; margin-bottom:4px;">সহযোগিতা প্রয়োজন?</div>
+        <p>যেকোনো প্রশ্ন বা অর্ডারে সাহায্য পেতে আমাদের সাথে সরাসরি কথা বলুন।</p>
+        <a href="https://wa.me/8801601866686" target="_blank" class="btn btn-gold btn-sm btn-block" style="padding: 10px; font-size: 0.8rem;">
+          💬 WhatsApp Support
+        </a>
+      </div>
+    `;
+    
+    nav.classList.add('enhanced');
+  }
+
+  nav.classList.toggle('open');
+  document.body.classList.toggle('menu-open');
+  
+  if (btn) {
+    if (nav.classList.contains('open')) {
+      btn.innerHTML = '✕';
+      btn.style.color = '#EAB308';
+      btn.style.borderColor = '#EAB308';
+    } else {
+      btn.innerHTML = '☰';
+      btn.style.color = 'var(--gold)';
+      btn.style.borderColor = 'rgba(234, 179, 8, 0.3)';
     }
   }
 }
 
-// মেনুর কোনো লিংকে চাপ দিলে যেন মেনুটি সাথে সাথে বন্ধ হয়ে যায়
-document.addEventListener('DOMContentLoaded', function() {
-  const navLinks = document.querySelectorAll('.main-nav a');
-  navLinks.forEach(link => {
-    link.addEventListener('click', () => {
-      const nav = document.getElementById('mainNav');
-      if (nav && nav.classList.contains('open')) {
-        toggleMenu();
-      }
-    });
-  });
+// মেনু লিংক ক্লিক করলে স্বয়ংক্রিয়ভাবে বন্ধ হবে
+document.addEventListener('click', function(e) {
+  const nav = document.getElementById('mainNav');
+  if (nav && nav.classList.contains('open') && e.target.closest('#mainNav a')) {
+    toggleMenu();
+  }
 });
 
 /* ---------------- প্রোডাক্ট কার্ড / গ্রিড ---------------- */
