@@ -59,7 +59,12 @@
         <div class="form-group">
           <label>ডেলিভারি এরিয়া *</label>
           <select id="deliveryArea" class="form-control" onchange="updateShipping()">
-                    <!-- পেমেন্ট মেথড বাটন -->
+            <option value="inside">ঢাকার ভিতরে (৳ 60)</option>
+            <option value="outside">ঢাকার বাইরে (৳ 120)</option>
+          </select>
+        </div>
+        
+        <!-- পেমেন্ট মেথড বাটন -->
         <div class="form-group" style="margin-top: 18px;">
           <label style="font-weight:700; color:#fff;">পেমেন্ট পদ্ধতি নির্বাচন করুন *</label>
           <div style="display: flex; gap: 12px; margin-top: 8px;">
@@ -72,10 +77,6 @@
               <span>📱 বিকাশ/নগদ (অনলাইন)</span>
             </label>
           </div>
-        </div>
-            <option value="inside">ঢাকার ভিতরে (৳ 60)</option>
-            <option value="outside">ঢাকার বাইরে (৳ 120)</option>
-          </select>
         </div>
 
         <button type="submit" class="btn btn-gold btn-block" style="margin-top:8px;">📱 WhatsApp-এ অর্ডার কনফার্ম করুন</button>
