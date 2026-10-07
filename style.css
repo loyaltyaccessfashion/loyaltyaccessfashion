@@ -435,3 +435,63 @@ textarea.form-control { resize: vertical; min-height: 80px; }
   0% { transform: scale(0.5); opacity: 0; }
   100% { transform: scale(1); opacity: 1; }
 }
+/* ==========================================================
+   MOBILE MENU FIX (FULL OVERLAY & SOLID BACKGROUND)
+   ========================================================== */
+@media (max-width: 760px) {
+  .menu-toggle {
+    display: block !important;
+    font-size: 1.6rem;
+    color: var(--gold);
+    cursor: pointer;
+    z-index: 10001 !important; /* বাটনের স্থান সবসময় সবার উপরে থাকবে */
+    position: relative;
+  }
+
+  .main-nav {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: #0A0A0A !important; /* সম্পূর্ণ গাঢ় কালো ব্যাকগ্রাউন্ড */
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 100px 28px 40px;
+    gap: 8px;
+    display: none;
+    z-index: 10000 !important; /* পেজের সব এলিমেন্টের উপরে থাকবে */
+    overflow-y: auto;
+  }
+
+  .main-nav.open {
+    display: flex !important;
+  }
+
+  .main-nav a {
+    color: #FFFFFF !important;
+    font-size: 1.1rem !important;
+    font-weight: 700 !important;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .main-nav a:hover,
+  .main-nav a.active {
+    color: var(--gold) !important;
+  }
+
+  .main-nav a::after {
+    content: "→";
+    font-size: 0.9rem;
+    color: var(--gold);
+  }
+
+  /* মেনু খোলা থাকলে পেজের স্ক্রোল বন্ধ থাকবে */
+  body.menu-open {
+    overflow: hidden !important;
+  }
+}
