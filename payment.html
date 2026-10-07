@@ -37,50 +37,50 @@
       <p>নিচের যেকোনো নম্বর ব্যবহার করে সেন্ড মানি/ক্যাশ-ইন করুন এবং তথ্য নিশ্চিত করুন</p>
     </div>
 
-    <!-- Payment Account Cards -->
+    <!-- পেমেন্ট নম্বর কার্ড -->
     <div class="pay-cards-grid">
       <!-- bKash -->
-      <div class="pay-card bkash-card">
+      <div class="pay-card">
         <div class="pay-card-header">
           <span class="pay-badge bkash-bg">bKash</span>
           <span class="pay-type">Personal / Send Money</span>
         </div>
         <div class="pay-number-box">
-          <span id="bkashNum">01601866686</span>
+          <span>01601866686</span>
           <button type="button" class="copy-btn" onclick="copyText('01601866686', 'বিকাশ নম্বর কপি হয়েছে!')">📋 কপি</button>
         </div>
       </div>
 
       <!-- Nagad -->
-      <div class="pay-card nagad-card">
+      <div class="pay-card">
         <div class="pay-card-header">
           <span class="pay-badge nagad-bg">Nagad</span>
           <span class="pay-type">Personal / Send Money</span>
         </div>
         <div class="pay-number-box">
-          <span id="nagadNum">01601866686</span>
+          <span>01601866686</span>
           <button type="button" class="copy-btn" onclick="copyText('01601866686', 'নগদ নম্বর কপি হয়েছে!')">📋 কপি</button>
         </div>
       </div>
 
       <!-- Rocket -->
-      <div class="pay-card rocket-card">
+      <div class="pay-card">
         <div class="pay-card-header">
           <span class="pay-badge rocket-bg">Rocket</span>
           <span class="pay-type">Personal / Send Money</span>
         </div>
         <div class="pay-number-box">
-          <span id="rocketNum">01601866686</span>
+          <span>01601866686</span>
           <button type="button" class="copy-btn" onclick="copyText('01601866686', 'রকেট নম্বর কপি হয়েছে!')">📋 কপি</button>
         </div>
       </div>
     </div>
 
-    <!-- Payment Verification Form -->
+    <!-- পেমেন্ট ফর্ম -->
     <div class="summary-box" style="margin-top: 30px; position: relative;">
       <h3>📝 পেমেন্ট ভেরিফিকেশন ফর্ম</h3>
       <p style="font-size: 0.8rem; color: var(--muted); margin-bottom: 16px;">
-        টাকা পাঠানোর পর নিচের তথ্যগুলো সঠিকভা‌বে পূরণ করে "পেমেন্ট নিশ্চিত করুন" বাটনে চাপুন।
+        টাকা পাঠানোর পর নিচের তথ্যগুলো পূরণ করে "পেমেন্ট নিশ্চিত করুন" বাটনে চাপুন।
       </p>
 
       <form onsubmit="submitManualPayment(event)">
@@ -95,7 +95,6 @@
             <option value="bKash (বিকাশ)">bKash (বিকাশ)</option>
             <option value="Nagad (নগদ)">Nagad (নগদ)</option>
             <option value="Rocket (রকেট)">Rocket (রকেট)</option>
-            <option value="Bank Transfer">Bank Transfer</option>
           </select>
         </div>
 
@@ -152,7 +151,6 @@
   <script src="orders.js"></script>
   <script src="main.js"></script>
   <script>
-    // URL থেকে ?order=LA-XXXX&total=1500 অটো পূরণ করবে
     const params = new URLSearchParams(window.location.search);
     if(params.get('order')) document.getElementById('payOrderId').value = params.get('order');
     if(params.get('total')) document.getElementById('payAmount').value = params.get('total');
