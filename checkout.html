@@ -59,6 +59,20 @@
         <div class="form-group">
           <label>ডেলিভারি এরিয়া *</label>
           <select id="deliveryArea" class="form-control" onchange="updateShipping()">
+                    <!-- পেমেন্ট মেথড বাটন -->
+        <div class="form-group" style="margin-top: 18px;">
+          <label style="font-weight:700; color:#fff;">পেমেন্ট পদ্ধতি নির্বাচন করুন *</label>
+          <div style="display: flex; gap: 12px; margin-top: 8px;">
+            <label class="pay-radio-card">
+              <input type="radio" name="paymentType" value="cod" checked>
+              <span>💵 ক্যাশ অন ডেলিভারি</span>
+            </label>
+            <label class="pay-radio-card">
+              <input type="radio" name="paymentType" value="online">
+              <span>📱 বিকাশ/নগদ (অনলাইন)</span>
+            </label>
+          </div>
+        </div>
             <option value="inside">ঢাকার ভিতরে (৳ 60)</option>
             <option value="outside">ঢাকার বাইরে (৳ 120)</option>
           </select>
@@ -68,20 +82,6 @@
         <p style="text-align:center; font-size:0.72rem; color:var(--muted); margin-top:10px;">অর্ডার কনফার্ম করলে WhatsApp-এ আমাদের কাছে চলে আসবে। পেমেন্ট: ক্যাশ অন ডেলিভারি।</p>
       </form>
       
-      <!-- Payment Method Option -->
-<div class="form-group" style="margin-top: 18px;">
-  <label style="font-weight:700; color:#fff;">পেমেন্ট পদ্ধতি নির্বাচন করুন *</label>
-  <div style="display: flex; gap: 12px; margin-top: 8px;">
-    <label class="pay-radio-card">
-      <input type="radio" name="paymentType" value="cod" checked>
-      <span>💵 ক্যাশ অন ডেলিভারি</span>
-    </label>
-    <label class="pay-radio-card">
-      <input type="radio" name="paymentType" value="online">
-      <span>📱 বিকাশ/নগদ (অনলাইন)</span>
-    </label>
-  </div>
-</div>
       
 <!-- ANIMATED COUPON BOX -->
 <div class="coupon-animated-box">
