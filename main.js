@@ -81,11 +81,40 @@ function showToast(msg) {
   toastTimer = setTimeout(() => toast.classList.remove('show'), 2300);
 }
 
-/* ---------------- মোবাইল মেনু ---------------- */
+/* ---------------- মোবাইল মেনু টগল (FIXED) ---------------- */
 function toggleMenu() {
   const nav = document.getElementById('mainNav');
-  if (nav) nav.classList.toggle('open');
+  const btn = document.querySelector('.menu-toggle');
+  
+  if (nav) {
+    nav.classList.toggle('open');
+    document.body.classList.toggle('menu-open');
+    
+    // মেনু খোলা থাকলে '✕' (Close) এবং বন্ধ থাকলে '☰' দেখাবে
+    if (btn) {
+      if (nav.classList.contains('open')) {
+        btn.innerHTML = '✕';
+        btn.style.color = '#EAB308';
+      } else {
+        btn.innerHTML = '☰';
+        btn.style.color = 'inherit';
+      }
+    }
+  }
 }
+
+// মেনুর কোনো লিংকে চাপ দিলে যেন মেনুটি সাথে সাথে বন্ধ হয়ে যায়
+document.addEventListener('DOMContentLoaded', function() {
+  const navLinks = document.querySelectorAll('.main-nav a');
+  navLinks.forEach(link => {
+    link.addEventListener('click', () => {
+      const nav = document.getElementById('mainNav');
+      if (nav && nav.classList.contains('open')) {
+        toggleMenu();
+      }
+    });
+  });
+});
 
 /* ---------------- প্রোডাক্ট কার্ড / গ্রিড ---------------- */
 function productCardHTML(p) {
