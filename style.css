@@ -566,3 +566,106 @@ textarea.form-control { resize: vertical; min-height: 80px; }
     overflow: hidden !important;
   }
 }
+
+/* ==========================================================
+   MANUAL PAYMENT PAGE STYLES
+   ========================================================== */
+.pay-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.pay-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  transition: all 0.3s ease;
+}
+
+.pay-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(234, 179, 8, 0.4);
+}
+
+.pay-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.pay-badge {
+  font-size: 0.72rem;
+  font-weight: 800;
+  padding: 3px 10px;
+  border-radius: 6px;
+  color: #fff;
+}
+
+.bkash-bg { background: #d12053; }
+.nagad-bg { background: #f7931e; }
+.rocket-bg { background: #8c3494; }
+
+.pay-type {
+  font-size: 0.65rem;
+  color: var(--muted);
+}
+
+.pay-number-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #0A0A0A;
+  border: 1px dashed var(--border);
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-weight: 800;
+  font-family: monospace;
+  font-size: 0.95rem;
+  color: var(--gold);
+}
+
+.copy-btn {
+  background: rgba(234, 179, 8, 0.15);
+  color: var(--gold);
+  border: 1px solid rgba(234, 179, 8, 0.3);
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  transition: 0.2s;
+}
+
+.copy-btn:hover {
+  background: var(--gold);
+  color: #000;
+}
+
+/* Radio Cards in Checkout */
+.pay-radio-card {
+  flex: 1;
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  padding: 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: 0.25s;
+}
+
+.pay-radio-card input:checked + span {
+  color: var(--gold);
+}
+
+.pay-radio-card:has(input:checked) {
+  border-color: var(--gold);
+  background: rgba(234, 179, 8, 0.08);
+}
