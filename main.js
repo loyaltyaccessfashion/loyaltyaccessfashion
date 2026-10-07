@@ -2,6 +2,82 @@
    MAIN.JS — পুরো সাইটের JavaScript লজিক
    ========================================================= */
 
+/* ----------------১-ক্লিকে নম্বর কপি করার ফাংশন ---------------- */
+function copyText(text, successMsg) {
+  navigator.clipboard.writeText(text).then(() => {
+    showToast('📋 ' + (successMsg || 'কপি হয়েছে!'));
+  }).catch(() => {
+    showToast('কপি করা যায়নি, ম্যানুয়ালি লিখুন');
+  });
+}
+
+/* ---------------- ম্যানুয়াল পেমেন্ট WhatsApp কনফার্মেশন ---------------- */
+function submitManualPayment(e) {
+  e.preventDefault();
+  
+  const orderId = document.getElementById('payOrderId').value.trim();
+  const method = document.getElementById('payMethod').value;
+  const sender = document.getElementById('senderNum').value.trim();
+  const trxId = document.getElementById('trxId').value.trim();
+  const amount = document.getElementById('payAmount').value.trim();
+
+  let msg = '💳 *ম্যানুয়াল পেমেন্ট ভেরিফিকেশন — Loyalty Access*\n\n';
+  msg += '🧾 Order ID: *' + orderId + '*\n';
+  msg += '📲 পেমেন্ট মাধ্যম: ' + method + '\n';
+  msg += '📞 সেন্ডার নম্বর: ' + sender + '\n';
+  msg += '🔢 Transaction ID (TrxID): *' + trxId + '*\n';
+  msg += '💰 পেমেন্ট পরিমাণ: ৳' + amount + '\n\n';
+  msg += 'অনুগ্রহ করে আমার পেমেন্ট ভেরিফাই করে অর্ডারটি কনফার্ম করুন।';
+
+  window.open('https://wa.me/' + WHATSAPP_NUMBER + '?text=' + encodeURIComponent(msg), '_blank');
+  showToast('✅ পেমেন্ট তথ্য পাঠানো হচ্ছে...');
+}
+
+/* ---------------- Checkout Process Update (অনলাইন পেমেন্ট রিডাইরেক্ট) ---------------- */
+// Process Order Override to check Cash on Delivery vs Online
+const oldProcessOrder = processOrder;
+processOrder = function(e) {
+  e.preventDefault();
+  const payTypeEl = document.querySelector('input[name="paymentType"]:checked');
+  const isOnline = payTypeEl && payTypeEl.value === 'online';
+
+  if (isOnline) {
+    const cart = getCart();
+    if (cart.length === 0) { showToast('আপনার কার্ট খালি!'); return; }
+
+    const name = document.getElementById('custName').value.trim();
+    const phone = document.getElementById('custPhone').value.trim();
+    const address = document.getElementById('custAddress').value.trim();
+    const area = document.getElementById('deliveryArea').value;
+    const fee = area === 'inside' ? DELIVERY.inside : DELIVERY.outside;
+    const subtotal = cartSubtotal();
+    const discount = appliedCoupon ? appliedCoupon.discount : 0;
+    const total = (subtotal + fee) - discount;
+
+    const orderId = 'LA-' + Math.floor(10000 + Math.random() * 90000);
+
+    // ১. প্রথমে WhatsApp-এ অর্ডারের তথ্য পাঠাবে
+    let msg = '🛒 *নতুন অনলাইন পেমেন্ট অর্ডার — Loyalty Access*\n';
+    msg += '🧾 Order ID: *' + orderId + '*\n\n';
+    msg += '👤 নাম: ' + name + '\n📞 ফোন: ' + phone + '\n📍 ঠিকানা: ' + address + '\n';
+    msg += '💵 *সর্বমোট বিল: ৳' + total + '* (অনলাইন পেমেন্ট পেন্ডিং)\n';
+
+    window.open('https://wa.me/' + WHATSAPP_NUMBER + '?text=' + encodeURIComponent(msg), '_blank');
+
+    localStorage.removeItem(CART_KEY);
+    showToast('অর্ডার তথ্য পাঠানো হয়েছে! পেমেন্ট পেজে নিয়ে যাওয়া হচ্ছে...');
+
+    // ২. ২ সেকেন্ড পর পেমেন্ট পেজে রিডাইরেক্ট করবে
+    setTimeout(() => {
+      window.location.href = `payment.html?order=${orderId}&total=${total}`;
+    }, 2000);
+
+  } else {
+    // ক্যাশ অন ডেলিভারি হলে আগের নিয়মে যাবে
+    oldProcessOrder(e);
+  }
+};
+
 const CART_KEY = 'laf_cart_v1';
 const ORDERS_KEY = 'laf_orders_v1';
 
@@ -117,7 +193,7 @@ function toggleMenu() {
             <div class="menu-brand-title">LOYALTY ACCESS</div>
             <div style="font-size: 0.58rem; color: var(--muted); letter-spacing: 2px;">LUXURY LIFESTYLE STORE</div>
           </div>
-          <span style="font-size:0.7rem; background:rgba(234,179,8,0.15); color:var(--gold); padding:4px 10px; border-radius:999px; border:1px solid rgba(234,179,8,0.3); font-weight:700;">!</span>
+          <span style="font-size:0.7rem; background:rgba(234,179,8,0.15); color:var(--gold); padding:4px 10px; border-radius:999px; border:1px solid rgba(234,179,8,0.3); font-weight:700;">VIP MENU</span>
         </div>
         <div class="mobile-menu-links">
           ${linksHTML}
