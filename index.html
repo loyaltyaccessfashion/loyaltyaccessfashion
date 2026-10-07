@@ -1,285 +1,148 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Loyalty Access Fashion | Luxury Lifestyle Store</title>
-<meta name="description" content="Premium watches, anime t-shirts and aesthetic home decor in Bangladesh. Cash on Delivery available.">
-<style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',system-ui,sans-serif}
-body{background:#0B0B0D;color:#fff}
-a{text-decoration:none;color:inherit}
-.gold{color:#D4AF37}
-.wrap{max-width:1200px;margin:auto;padding:0 16px}
-
-/* HEADER */
-header{position:sticky;top:0;z-index:99;background:rgba(11,11,13,.95);
-backdrop-filter:blur(10px);border-bottom:1px solid rgba(212,175,55,.25)}
-.nav{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;
-max-width:1200px;margin:auto}
-.logo{font-size:19px;font-weight:700;letter-spacing:1px;color:#D4AF37}
-.logo span{display:block;font-size:9px;letter-spacing:3px;color:#999;font-weight:400}
-.navbtn{background:#D4AF37;color:#000;padding:9px 16px;border-radius:30px;
-font-size:13px;font-weight:700}
-
-/* HERO */
-.hero{text-align:center;padding:70px 16px 55px;
-background:radial-gradient(circle at 50% 0%,#1c1c20,#0B0B0D 70%)}
-.hero h1{font-size:30px;line-height:1.35;margin-bottom:14px}
-.hero p{color:#aaa;font-size:14px;margin-bottom:26px}
-.btn{display:inline-block;background:#D4AF37;color:#000;padding:13px 32px;
-border-radius:30px;font-weight:700;font-size:14px}
-.btn2{display:inline-block;border:1px solid #D4AF37;color:#D4AF37;
-padding:13px 28px;border-radius:30px;font-weight:600;font-size:14px;margin-left:8px}
-
-/* BADGES */
-.badges{display:flex;gap:10px;overflow-x:auto;padding:22px 16px;
-border-top:1px solid #1e1e22;border-bottom:1px solid #1e1e22}
-.badge{flex:0 0 auto;background:#141418;border:1px solid #26262b;
-padding:11px 16px;border-radius:12px;font-size:12px;color:#ccc}
-
-/* SECTION */
-.sec{padding:48px 0 10px}
-.sec h2{text-align:center;font-size:23px;margin-bottom:6px}
-.sec .sub{text-align:center;color:#888;font-size:13px;margin-bottom:28px}
-
-/* PRODUCT GRID */
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(165px,1fr));gap:14px}
-.card{background:#141418;border:1px solid #26262b;border-radius:14px;
-overflow:hidden;transition:.25s}
-.card:hover{border-color:#D4AF37;transform:translateY(-4px)}
-.card img{width:100%;aspect-ratio:1/1;object-fit:cover;display:block;background:#1c1c20}
-.info{padding:12px}
-.code{font-size:10px;color:#D4AF37;letter-spacing:1px}
-.name{font-size:13px;font-weight:600;margin:5px 0 7px;line-height:1.4}
-.price{font-size:16px;font-weight:800;color:#D4AF37}
-.old{font-size:12px;color:#777;text-decoration:line-through;margin-left:6px}
-.order{display:block;text-align:center;background:#D4AF37;color:#000;
-padding:9px;border-radius:9px;font-weight:700;font-size:12px;margin-top:10px}
-.tag{position:absolute;margin:9px;background:#D4AF37;color:#000;
-padding:3px 9px;border-radius:20px;font-size:10px;font-weight:700}
-
-/* WHY US */
-.why{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
-.why div{background:#141418;border:1px solid #26262b;border-radius:14px;
-padding:20px 14px;text-align:center}
-.why h4{font-size:14px;margin:8px 0 5px}
-.why p{font-size:12px;color:#999;line-height:1.6}
-
-/* STEPS */
-.steps{background:#141418;border:1px solid #26262b;border-radius:16px;padding:22px}
-.step{display:flex;gap:14px;padding:13px 0;border-bottom:1px dashed #2a2a30}
-.step:last-child{border:none}
-.num{flex:0 0 32px;height:32px;background:#D4AF37;color:#000;border-radius:50%;
-display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px}
-.step b{font-size:14px}
-.step p{font-size:12px;color:#999;margin-top:3px}
-
-/* FOOTER */
-footer{margin-top:50px;border-top:1px solid #1e1e22;padding:34px 16px;text-align:center}
-footer p{font-size:12px;color:#888;line-height:2}
-
-/* FLOAT */
-.float{position:fixed;right:16px;bottom:18px;background:#25D366;color:#fff;
-width:55px;height:55px;border-radius:50%;display:flex;align-items:center;
-justify-content:center;font-size:26px;box-shadow:0 4px 18px rgba(0,0,0,.5);z-index:99}
-
-@media(max-width:480px){.hero h1{font-size:24px}.btn2{margin:10px 0 0}}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0A0A0A">
+  <title>Loyalty Access Fashion — Luxury Lifestyle Store</title>
+  <meta name="description" content="প্রিমিয়াম ওয়াচ, অ্যানিমে টি-শার্ট ও অ্যাস্থেটিক হোম ডেকর। সারা বাংলাদেশে ক্যাশ অন ডেলিভারি।">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<header class="header">
-  <a class="brand" href="#">
-    <span class="brand__title">LOYALTY ACCESS</span>
-    <span class="brand__sub">LUXURY LIFESTYLE STORE</span>
-  </a>
 
-  <button class="navToggle" id="navToggle" aria-label="Menu" aria-expanded="false">
-    <span></span><span></span><span></span>
-  </button>
+  <!-- অ্যানাউন্সমেন্ট বার -->
+  <div class="announce">⚡ সারা দেশে ক্যাশ অন ডেলিভারি | 📞 WhatsApp: +8801601866686 | ⭐ প্রিমিয়াম কোয়ালিটি গ্যারান্টি</div>
 
-  <nav class="nav" id="nav">
-    <a href="#shop" class="nav__link">Shop</a>
-    <a href="#collections" class="nav__link">Collections</a>
-    <a href="#track" class="nav__link">Track Order</a>
-    <a href="#contact" class="nav__link">Contact</a>
-  </nav>
-
-  <div class="headerActions">
-    <button class="cartBtn" id="openCart" aria-label="Cart">
-      Cart
-      <span class="cartBadge" id="cartCount">0</span>
-    </button>
-  </div>
-</header>
-
-<!-- Cart Drawer -->
-<div class="backdrop" id="backdrop" hidden></div>
-
-<aside class="cartDrawer" id="cartDrawer" aria-hidden="true">
-  <div class="cartDrawer__top">
-    <h3>আপনার কার্ট</h3>
-    <button class="iconBtn" id="closeCart" aria-label="Close">✕</button>
-  </div>
-
-  <div class="cartItems" id="cartItems"></div>
-
-  <div class="cartSummary">
-    <div class="row">
-      <span>Subtotal</span>
-      <strong id="cartTotal">৳0</strong>
-    </div>
-    <button class="primaryBtn" id="checkoutBtn">WhatsApp এ অর্ডার করুন</button>
-    <button class="ghostBtn" id="clearCartBtn">Clear cart</button>
-  </div>
-</aside>
-
-<!-- Shop Section -->
-<section id="shop" class="section">
-  <div class="sectionHead">
-    <h2>Shop</h2>
-    <div class="filters">
-      <input id="searchInput" class="input" placeholder="Search product..." />
-      <select id="categorySelect" class="input">
-        <option value="all">All</option>
-      </select>
-    </div>
-  </div>
-
-  <div class="grid" id="productGrid"></div>
-</section>
-
-<script src="js/app.js"></script>
-<header>
-  <div class="nav">
-    <div class="logo">LOYALTY ACCESS<span>LUXURY LIFESTYLE STORE</span></div>
-    <a href="#products" class="navbtn">Shop Now</a>
-  </div>
-</header>
-
-<section class="hero">
-  <h1>স্টাইল শুধু পোশাকে নয়<br><span class="gold">আপনার ঘরেও</span> 🖤</h1>
-  <p>প্রিমিয়াম ঘড়ি • অ্যানিমে টি-শার্ট • হোম ডেকর</p>
-  <a href="#products" class="btn">🛍️ কালেকশন দেখুন</a>
-  <a href="#track" class="btn2">🔍 Track Order</a>
-</section>
-
-<div class="badges">
-  <div class="badge">🚚 সারাদেশে ডেলিভারি</div>
-  <div class="badge">💳 ক্যাশ অন ডেলিভারি</div>
-  <div class="badge">🔄 ইজি এক্সচেঞ্জ</div>
-  <div class="badge">✅ ১০০% অরিজিনাল</div>
-</div>
-
-<!-- ========= PRODUCTS ========= -->
-<section class="sec wrap" id="products">
-  <h2>আমাদের <span class="gold">কালেকশন</span></h2>
-  <p class="sub">সব প্রোডাক্ট স্টকে আছে ✅</p>
-
-  <div class="grid">
-
-    <!-- ===== একটি প্রোডাক্ট কার্ড (কপি করে বাড়াবেন) ===== -->
-    <div class="card">
-      <div class="tag">NEW</div>
-      <img src="https://ibb.co/jkNSTrBr" alt="Chronograph Watch">
-      <div class="info">
-        <div class="code">LAF-W01</div>
-        <div class="name">Premium Chronograph Style Watch</div>
-        <div class="price">৳৭৯৯<span class="old">৳১২০০</span></div>
-        <a class="order" target="_blank"
-        href="https://wa.me/8801601866686?text=আসসালামু%20আলাইকুম%2C%20আমি%20LAF-W01%20অর্ডার%20করতে%20চাই">
-        🛒 অর্ডার করুন</a>
+  <!-- হেডার -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="index.html" class="logo">
+        <span class="logo-main">LOYALTY ACCESS</span>
+        <span class="logo-sub">Luxury Lifestyle Store</span>
+      </a>
+      <nav class="main-nav" id="mainNav">
+        <a href="index.html" class="active">হোম</a>
+        <a href="shop.html">কালেকশন</a>
+        <a href="track-order.html">ট্র্যাক অর্ডার</a>
+        <a href="contact.html">যোগাযোগ</a>
+      </nav>
+      <div class="header-actions">
+        <a href="cart.html" class="cart-btn" title="কার্ট">🛍️<span class="cart-badge" id="cartCount">0</span></a>
+        <button class="menu-toggle" onclick="toggleMenu()" aria-label="Menu">☰</button>
       </div>
     </div>
+  </header>
 
-    <div class="card">
-      <img src="https://ibb.co/jkNSTrBr" alt="Product 2">
-      <div class="info">
-        <div class="code">LAF-W02</div>
-        <div class="name">Classic Silver Analog Watch</div>
-        <div class="price">৳৭৯৯</div>
-        <a class="order" target="_blank"
-        href="https://wa.me/8801601866686?text=আমি%20LAF-W02%20অর্ডার%20করতে%20চাই">
-        🛒 অর্ডার করুন</a>
+  <!-- হিরো সেকশন -->
+  <section class="hero">
+    <div class="container">
+      <span class="hero-badge">🔥 Anime & Home Decor Collection</span>
+      <h1>স্টাইল শুধু পোশাকে নয়,<br><span class="gold-line">আপনার ঘরেও ❤️</span></h1>
+      <p>প্রিমিয়াম ওয়াচ • অ্যানিমে টি-শার্ট • হোম ডেকর — সেরা কালেকশন এখন এক জায়গায়।</p>
+      <div class="hero-buttons">
+        <a href="shop.html" class="btn btn-gold">🛍️ কালেকশন দেখুন</a>
+        <a href="track-order.html" class="btn btn-outline">🔍 Track Order</a>
       </div>
     </div>
+  </section>
 
-    <div class="card">
-      <img src="ছবির_লিংক_এখানে" alt="Product 3">
-      <div class="info">
-        <div class="code">LAF-T01</div>
-        <div class="name">Anime Minimal Cotton Tee</div>
-        <div class="price">৳৪৯৯</div>
-        <a class="order" target="_blank"
-        href="https://wa.me/8801601866686?text=আমি%20LAF-T01%20অর্ডার%20করতে%20চাই">
-        🛒 অর্ডার করুন</a>
+  <!-- ফিচার স্ট্রিপ -->
+  <section class="container section-sm">
+    <div class="feature-strip">
+      <div class="feature-pill">
+        <span class="icon">🚚</span>
+        <div><h4>সারাদেশে ডেলিভারি</h4><p>ঢাকায় ১-২ দিন, বাইরে ২-৪ দিন</p></div>
+      </div>
+      <div class="feature-pill">
+        <span class="icon">💵</span>
+        <div><h4>ক্যাশ অন ডেলিভারি</h4><p>পণ্য হাতে পেয়ে টাকা দিন</p></div>
+      </div>
+      <div class="feature-pill">
+        <span class="icon">🔄</span>
+        <div><h4>ইজি এক্সচেঞ্জ</h4><p>সমস্যা থাকলে ২৪ ঘণ্টায় বদলে দেব</p></div>
       </div>
     </div>
+  </section>
 
-    <div class="card">
-      <img src="https://ibb.co/k6MntRf7" alt="Product 4">
-      <div class="info">
-        <div class="code">LAF-D01</div>
-        <div class="name">Art Eiffel Tower Showpiece, Metal Gift for Friend
-- room decoration item</div>
-        <div class="price">৳১৯৯</div>
-        <a class="order" target="_blank"
-        href="https://wa.me/8801601866686?text=আমি%20LAF-D01%20অর্ডার%20করতে%20চাই">
-        🛒 অর্ডার করুন</a>
+  <!-- ফিচারড প্রোডাক্ট -->
+  <section class="section container">
+    <h2 class="section-title">আমাদের <span class="text-gold">কালেকশন</span></h2>
+    <p class="section-subtitle">সব প্রোডাক্ট স্টকে আছে ✅</p>
+    <div class="product-grid" id="featuredGrid"></div>
+    <div style="text-align:center; margin-top:34px;">
+      <a href="shop.html" class="btn btn-dark">সব প্রোডাক্ট দেখুন →</a>
+    </div>
+  </section>
+
+  <!-- কেন আমরা -->
+  <section class="section container">
+    <h2 class="section-title">কেন <span class="text-gold">আমরা?</span></h2>
+    <p class="section-subtitle">আপনার বিশ্বাসই আমাদের পুঁজি</p>
+    <div class="why-grid">
+      <div class="why-card"><div class="why-icon">🏆</div><h3>প্রিমিয়াম কোয়ালিটি</h3><p>প্রতিটি প্রোডাক্ট হাতে চেক করে পাঠানো হয়</p></div>
+      <div class="why-card"><div class="why-icon">🚚</div><h3>দ্রুত ডেলিভারি</h3><p>ঢাকায় ১-২ দিন, বাইরে ২-৪ দিন</p></div>
+      <div class="why-card"><div class="why-icon">💳</div><h3>ক্যাশ অন ডেলিভারি</h3><p>হাতে পেয়ে টাকা দিন</p></div>
+      <div class="why-card"><div class="why-icon">🔄</div><h3>ইজি এক্সচেঞ্জ</h3><p>সমস্যা থাকলে ২৪ ঘণ্টায় বদলে দেব</p></div>
+    </div>
+  </section>
+
+  <!-- অর্ডার স্টেপ -->
+  <section class="section container">
+    <div class="steps-box">
+      <h2 class="section-title" style="font-size:1.4rem;">কীভাবে <span class="text-gold">অর্ডার</span> করবেন?</h2>
+      <p class="section-subtitle">মাত্র ৩টি ধাপ</p>
+      <div class="steps-grid">
+        <div class="step-card"><span class="step-num">১</span><div><h4>প্রোডাক্ট বাছুন</h4><p>পছন্দের প্রোডাক্টের "অর্ডার করুন" বাটনে চাপুন</p></div></div>
+        <div class="step-card"><span class="step-num">২</span><div><h4>তথ্য পূরণ করুন</h4><p>নাম, মোবাইল ও ঠিকানা লিখে অর্ডার কনফার্ম করুন</p></div></div>
+        <div class="step-card"><span class="step-num">৩</span><div><h4>হাতে পেয়ে টাকা দিন</h4><p>প্রোডাক্ট দেখে, বুঝে তারপর পেমেন্ট করুন ✅</p></div></div>
       </div>
     </div>
+  </section>
 
-  </div>
-</section>
+  <!-- CTA ব্যানার -->
+  <section class="container section">
+    <div class="cta-banner">
+      <h2>নতুন অফার ও ডিসকাউন্ট পেতে চান?</h2>
+      <p>আমাদের WhatsApp-এ মেসেজ দিন, সবচেয়ে আগে অফার পাবেন!</p>
+      <a href="https://wa.me/8801601866686" target="_blank" class="btn btn-gold">📱 WhatsApp-এ যোগাযোগ করুন</a>
+    </div>
+  </section>
 
-<!-- ========= WHY US ========= -->
-<section class="sec wrap">
-  <h2>কেন <span class="gold">আমরা</span>?</h2>
-  <p class="sub">আপনার বিশ্বাসই আমাদের পুঁজি</p>
-  <div class="why">
-    <div><div style="font-size:26px">🏆</div><h4>প্রিমিয়াম কোয়ালিটি</h4><p>প্রতিটি প্রোডাক্ট হাতে চেক করে পাঠানো হয়</p></div>
-    <div><div style="font-size:26px">🚚</div><h4>দ্রুত ডেলিভারি</h4><p>ঢাকায় ১–২ দিন, বাইরে ২–৪ দিন</p></div>
-    <div><div style="font-size:26px">💳</div><h4>ক্যাশ অন ডেলিভারি</h4><p>হাতে পেয়ে টাকা দিন</p></div>
-    <div><div style="font-size:26px">🔄</div><h4>ইজি এক্সচেঞ্জ</h4><p>সমস্যা থাকলে ২৪ ঘণ্টায় বদলে দেব</p></div>
-  </div>
-</section>
+  <!-- ফুটার -->
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <p class="footer-logo">LOYALTY ACCESS</p>
+        <p class="footer-tag">LUXURY LIFESTYLE STORE</p>
+        <p class="footer-desc">প্রিমিয়াম ওয়াচ, অ্যানিমে টি-শার্ট ও অ্যাস্থেটিক হোম ডেকর — সব এক জায়গায়। সারা বাংলাদেশে ক্যাশ অন ডেলিভারি।</p>
+      </div>
+      <div>
+        <h4>গুরুত্বপূর্ণ লিংক</h4>
+        <ul>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="contact.html">Contact Us</a></li>
+          <li><a href="privacy.html">Privacy Policy</a></li>
+          <li><a href="exchange.html">Exchange Policy</a></li>
+          <li><a href="track-order.html">Track Order</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>যোগাযোগ</h4>
+        <ul>
+          <li>📱 <a href="https://wa.me/8801601866686" target="_blank">WhatsApp: +8801601866686</a></li>
+          <li>📘 <a href="https://facebook.com" target="_blank">Facebook Page</a></li>
+          <li>🚚 সারা বাংলাদেশে ডেলিভারি</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2025 Loyalty Access Fashion — All Rights Reserved.</div>
+  </footer>
 
-<!-- ========= HOW TO ORDER ========= -->
-<section class="sec wrap">
-  <h2>কীভাবে <span class="gold">অর্ডার</span> করবেন</h2>
-  <p class="sub">মাত্র ৩টি ধাপ</p>
-  <div class="steps">
-    <div class="step"><div class="num">1</div><div><b>প্রোডাক্ট বাছুন</b><p>পছন্দের প্রোডাক্টের "অর্ডার করুন" বাটনে চাপুন</p></div></div>
-    <div class="step"><div class="num">2</div><div><b>তথ্য পাঠান</b><p>WhatsApp-এ নাম, নম্বর ও ঠিকানা লিখে পাঠান</p></div></div>
-    <div class="step"><div class="num">3</div><div><b>হাতে পেয়ে টাকা দিন</b><p>প্রোডাক্ট দেখে, বুঝে তারপর পেমেন্ট ✅</p></div></div>
-  </div>
-</section>
-
-<!-- ========= TRACKING ========= -->
-<section class="sec wrap" id="track">
-  <h2>অর্ডার <span class="gold">ট্র্যাকিং</span></h2>
-  <p class="sub">আপনার Order ID দিয়ে সর্বশেষ অবস্থা দেখুন</p>
-  <div class="steps" style="text-align:center">
-    <p style="font-size:13px;color:#aaa;line-height:1.9">
-      🟡 Order Received → 📦 Packed → 🚚 Shipped<br>
-      → 🛵 Out for Delivery → ✅ Delivered
-    </p>
-    <a class="btn" style="margin-top:18px" target="_blank"
-    href="https://bit.ly/4xR3qbr">📊 Live Status দেখুন</a>
-  </div>
-</section>
-
-<footer>
-  <div class="logo" style="justify-content:center">LOYALTY ACCESS<span>LUXURY LIFESTYLE STORE</span></div>
-  <p style="margin-top:14px">
-    📲 WhatsApp: +8801601866686<br>
-    📘 <a class="gold" target="_blank" href="https://facebook.com/loyaltyaccessfashion">Facebook Page</a><br>
-    🚚 সারা বাংলাদেশে ডেলিভারি<br><br>
-    <span style="color:#555;font-size:11px">© 2025 Loyalty Access Fashion</span>
-  </p>
-</footer>
-
-<a class="float" target="_blank" href="https://wa.me/8801601866686">💬</a>
-
+  <script src="products.js"></script>
+  <script src="orders.js"></script>
+  <script src="main.js"></script>
+  <script>
+    renderProductGrid('#featuredGrid', PRODUCTS.slice(0, 4));
+  </script>
 </body>
 </html>
