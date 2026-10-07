@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0A0A0A">
+  <title>Gift Cards — Loyalty Access Fashion</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Gift Card Custom Lux Design */
+    .gift-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 22px;
+      margin-top: 30px;
+    }
+    .gift-card-item {
+      background: linear-gradient(135deg, #1f1902 0%, #141414 100%);
+      border: 1.5px solid rgba(234, 179, 8, 0.4);
+      border-radius: var(--radius);
+      padding: 26px;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.35s ease;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+    .gift-card-item:hover {
+      transform: translateY(-8px) scale(1.02);
+      border-color: var(--gold);
+      box-shadow: 0 15px 35px rgba(234, 179, 8, 0.25);
+    }
+    .gift-card-item::before {
+      content: "";
+      position: absolute;
+      top: -50%;
+      right: -50%;
+      width: 150px;
+      height: 150px;
+      background: radial-gradient(circle, rgba(234, 179, 8, 0.2), transparent);
+      border-radius: 50%;
+    }
+    .gift-badge {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: var(--gold);
+      color: #000;
+      font-size: 0.65rem;
+      font-weight: 800;
+      padding: 3px 10px;
+      border-radius: 999px;
+    }
+    .gift-val {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--gold);
+      margin: 15px 0 5px;
+    }
+    .gift-code-preview {
+      background: rgba(0,0,0,0.6);
+      border: 1px dashed var(--gold);
+      color: #fff;
+      font-family: monospace;
+      padding: 8px 12px;
+      border-radius: 8px;
+      display: inline-block;
+      font-size: 0.85rem;
+      letter-spacing: 2px;
+      margin: 10px 0 16px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="announce">⚡ সারা দেশে ক্যাশ অন ডেলিভারি | 📞 WhatsApp: +8801601866686 | ⭐ প্রিমিয়াম কোয়ালিটি গ্যারান্টি</div>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="index.html" class="logo">
+        <span class="logo-main">LOYALTY ACCESS</span>
+        <span class="logo-sub">Luxury Lifestyle Store</span>
+      </a>
+      <nav class="main-nav" id="mainNav">
+        <a href="index.html">হোম</a>
+        <a href="shop.html">কালেকশন</a>
+        <a href="gift-card.html" class="active">🎁 গিফট কার্ড</a>
+        <a href="track-order.html">ট্র্যাক অর্ডার</a>
+        <a href="contact.html">যোগাযোগ</a>
+      </nav>
+      <div class="header-actions">
+        <a href="cart.html" class="cart-btn" title="কার্ট">🛍️<span class="cart-badge" id="cartCount">0</span></a>
+        <button class="menu-toggle" onclick="toggleMenu()" aria-label="Menu">☰</button>
+      </div>
+    </div>
+  </header>
+
+  <section class="container section">
+    <div class="page-head">
+      <h1>ডিজিটাল <span class="text-gold">গিফট কার্ড</span></h1>
+      <p>প্রিয়জনকে বিশেষ দিনে দিন লাক্সারি গিফট কার্ড! কেনাকাটার সময় কুপন হিসেবে ব্যবহার করা যাবে।</p>
+    </div>
+
+    <div class="gift-grid">
+      <!-- 500 TK Gift Card -->
+      <div class="gift-card-item">
+        <span class="gift-badge">GIFT CARD</span>
+        <div style="font-size:0.75rem; color:var(--muted); text-transform:uppercase; letter-spacing:1px;">Loyalty Access VIP</div>
+        <div class="gift-val">৳ 500</div>
+        <p style="font-size:0.8rem; color:var(--muted);">যেকোনো প্রোডাক্ট ক্রয়ে ব্যবহারযোগ্য</p>
+        <div class="gift-code-preview">CODE: LOYALTY500</div>
+        <button onclick="buyGiftCard(500, 'LOYALTY500')" class="btn btn-gold btn-block btn-sm">🛒 গিফট কার্ডটি কিনুন</button>
+      </div>
+
+      <!-- 1000 TK Gift Card -->
+      <div class="gift-card-item">
+        <span class="gift-badge">POPULAR</span>
+        <div style="font-size:0.75rem; color:var(--muted); text-transform:uppercase; letter-spacing:1px;">Loyalty Access VIP</div>
+        <div class="gift-val">৳ 1,000</div>
+        <p style="font-size:0.8rem; color:var(--muted);">১০০০ টাকার সমপরিমাণ ডিসকাউন্ট কুপন</p>
+        <div class="gift-code-preview">CODE: GIFT1000</div>
+        <button onclick="buyGiftCard(1000, 'GIFT1000')" class="btn btn-gold btn-block btn-sm">🛒 গিফট কার্ডটি কিনুন</button>
+      </div>
+
+      <!-- 2000 TK Gift Card -->
+      <div class="gift-card-item">
+        <span class="gift-badge">BEST VALUE</span>
+        <div style="font-size:0.75rem; color:var(--muted); text-transform:uppercase; letter-spacing:1px;">Loyalty Access VIP</div>
+        <div class="gift-val">৳ 2,000</div>
+        <p style="font-size:0.8rem; color:var(--muted);">২০০০ টাকার সমপরিমাণ ডিসকাউন্ট কুপন</p>
+        <div class="gift-code-preview">CODE: VIP2000</div>
+        <button onclick="buyGiftCard(2000, 'VIP2000')" class="btn btn-gold btn-block btn-sm">🛒 গিফট কার্ডটি কিনুন</button>
+      </div>
+    </div>
+
+    <!-- How to Use -->
+    <div class="steps-box" style="margin-top:50px;">
+      <h3 class="section-title" style="font-size:1.2rem;">কীভাবে গিফট কার্ড কাজ করে?</h3>
+      <div class="steps-grid" style="margin-top:20px;">
+        <div class="step-card"><span class="step-num">১</span><div><h4>কার্ডটি অর্ডার করুন</h4><p>পছন্দের অ্যামাউন্টের কার্ড কিনলে আপনাকে একটি ইউনিক কুপন কোড দেওয়া হবে।</p></div></div>
+        <div class="step-card"><span class="step-num">২</span><div><h4>কুপন ইনপুট দিন</h4><p>চেকআউট পেজে 'কুপন কোড' বক্সে কোডটি বসিয়ে Apply এ চাপুন।</p></div></div>
+        <div class="step-card"><span class="step-num">৩</span><div><h4>ডিসকাউন্ট উপভোগ করুন</h4><p>কুপনের সমপরিমাণ টাকা আপনার মোট বিল থেকে স্বয়ংক্রিয়ভাবে মাইনাস হয়ে যাবে!</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <p class="footer-logo">LOYALTY ACCESS</p>
+        <p class="footer-tag">LUXURY LIFESTYLE STORE</p>
+        <p class="footer-desc">প্রিমিয়াম ওয়াচ, অ্যানিমে টি-শার্ট ও অ্যাস্থেটিক হোম ডেকর — সব এক জায়গায়। সারা বাংলাদেশে ক্যাশ অন ডেলিভারি।</p>
+      </div>
+      <div>
+        <h4>গুরুত্বপূর্ণ লিংক</h4>
+        <ul>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="gift-card.html">Gift Cards</a></li>
+          <li><a href="contact.html">Contact Us</a></li>
+          <li><a href="privacy.html">Privacy Policy</a></li>
+          <li><a href="exchange.html">Exchange Policy</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>যোগাযোগ</h4>
+        <ul>
+          <li>📱 <a href="https://wa.me/8801601866686" target="_blank">WhatsApp: +8801601866686</a></li>
+          <li>📘 <a href="https://facebook.com" target="_blank">Facebook Page</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2025 Loyalty Access Fashion — All Rights Reserved.</div>
+  </footer>
+
+  <script src="products.js"></script>
+  <script src="orders.js"></script>
+  <script src="main.js"></script>
+  <script>
+    function buyGiftCard(amount, code) {
+      var msg = "🎁 *নতুন গিফট কার্ড ক্রয়ের আবেদন*\n\nঅ্যামাউন্ট: ৳" + amount + "\nকুপন কোড টাইপ: " + code + "\n\nআমি এই গিফট কার্ডটি কিনতে চাই, অনুগ্রহ করে পেমেন্ট ডিটেইলস পাঠান।";
+      window.open("https://wa.me/" + WHATSAPP_NUMBER + "?text=" + encodeURIComponent(msg), "_blank");
+    }
+  </script>
+</body>
+</html>
