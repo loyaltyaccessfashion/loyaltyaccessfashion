@@ -435,17 +435,25 @@ textarea.form-control { resize: vertical; min-height: 80px; }
   0% { transform: scale(0.5); opacity: 0; }
   100% { transform: scale(1); opacity: 1; }
 }
+
 /* ==========================================================
-   MOBILE MENU FIX (FULL OVERLAY & SOLID BACKGROUND)
+   LUXURY MOBILE MENU DRAWER (GLASSMORPHISM & APP UI)
    ========================================================== */
 @media (max-width: 760px) {
   .menu-toggle {
-    display: block !important;
-    font-size: 1.6rem;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    background: rgba(234, 179, 8, 0.1);
+    border: 1px solid rgba(234, 179, 8, 0.3);
     color: var(--gold);
+    font-size: 1.3rem;
     cursor: pointer;
-    z-index: 10001 !important; /* বাটনের স্থান সবসময় সবার উপরে থাকবে */
-    position: relative;
+    z-index: 10001 !important;
+    transition: all 0.3s ease;
   }
 
   .main-nav {
@@ -454,43 +462,106 @@ textarea.form-control { resize: vertical; min-height: 80px; }
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: #0A0A0A !important; /* সম্পূর্ণ গাঢ় কালো ব্যাকগ্রাউন্ড */
+    height: 100dvh;
+    /* Frosted Luxury Dark Glass Background */
+    background: rgba(12, 12, 12, 0.94) !important;
+    backdrop-filter: blur(25px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(25px) saturate(180%) !important;
     flex-direction: column;
-    justify-content: flex-start;
-    padding: 100px 28px 40px;
-    gap: 8px;
+    justify-content: space-between;
+    padding: 24px 20px 30px;
     display: none;
-    z-index: 10000 !important; /* পেজের সব এলিমেন্টের উপরে থাকবে */
+    z-index: 10000 !important;
     overflow-y: auto;
+    box-sizing: border-box;
+    animation: menuSlideDown 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  @keyframes menuSlideDown {
+    from { opacity: 0; transform: translateY(-20px) scale(0.98); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
   }
 
   .main-nav.open {
     display: flex !important;
   }
 
+  /* Inside Menu Links Styling */
+  .mobile-menu-links {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 15px;
+  }
+
   .main-nav a {
-    color: #FFFFFF !important;
-    font-size: 1.1rem !important;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 14px;
+    padding: 14px 18px !important;
+    color: #EDEDED !important;
+    font-size: 0.95rem !important;
     font-weight: 700 !important;
-    padding: 14px 0;
-    border-bottom: 1px solid var(--border);
     display: flex;
     align-items: center;
     justify-content: space-between;
+    transition: all 0.25s ease;
+    text-decoration: none;
   }
 
   .main-nav a:hover,
   .main-nav a.active {
+    background: linear-gradient(135deg, rgba(234, 179, 8, 0.15), rgba(20, 20, 20, 0.8)) !important;
+    border-color: rgba(234, 179, 8, 0.5) !important;
     color: var(--gold) !important;
+    transform: translateX(4px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
   }
 
-  .main-nav a::after {
-    content: "→";
-    font-size: 0.9rem;
+  .main-nav a .arrow-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: rgba(234, 179, 8, 0.1);
     color: var(--gold);
+    display: grid;
+    place-items: center;
+    font-size: 0.75rem;
   }
 
-  /* মেনু খোলা থাকলে পেজের স্ক্রোল বন্ধ থাকবে */
+  /* Mobile Menu Header inside Drawer */
+  .menu-header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .menu-brand-title {
+    font-weight: 800;
+    color: var(--gold);
+    font-size: 1.05rem;
+    letter-spacing: 1px;
+  }
+
+  /* Mobile Menu Footer Support Card */
+  .menu-footer-card {
+    background: linear-gradient(135deg, #181504 0%, #101010 100%);
+    border: 1px solid rgba(234, 179, 8, 0.3);
+    border-radius: 16px;
+    padding: 18px;
+    text-align: center;
+    margin-top: 20px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+  }
+
+  .menu-footer-card p {
+    font-size: 0.75rem;
+    color: var(--muted);
+    margin-bottom: 12px;
+  }
+
   body.menu-open {
     overflow: hidden !important;
   }
