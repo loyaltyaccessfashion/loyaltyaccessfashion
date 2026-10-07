@@ -117,7 +117,7 @@ function toggleMenu() {
             <div class="menu-brand-title">LOYALTY ACCESS</div>
             <div style="font-size: 0.58rem; color: var(--muted); letter-spacing: 2px;">LUXURY LIFESTYLE STORE</div>
           </div>
-          <span style="font-size:0.7rem; background:rgba(234,179,8,0.15); color:var(--gold); padding:4px 10px; border-radius:999px; border:1px solid rgba(234,179,8,0.3); font-weight:700;">VIP MENU</span>
+          <span style="font-size:0.7rem; background:rgba(234,179,8,0.15); color:var(--gold); padding:4px 10px; border-radius:999px; border:1px solid rgba(234,179,8,0.3); font-weight:700;">!</span>
         </div>
         <div class="mobile-menu-links">
           ${linksHTML}
