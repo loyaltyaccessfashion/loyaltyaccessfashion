@@ -669,3 +669,32 @@ textarea.form-control { resize: vertical; min-height: 80px; }
   border-color: var(--gold);
   background: rgba(234, 179, 8, 0.08);
 }
+
+/* ==========================================================
+   VIBRANT BUTTON CLICK ANIMATION & TOUCH FEEDBACK
+   ========================================================== */
+
+/* প্রতিটি বাটনে প্রেস করলে ইলাস্টিক পুশ অ্যানিমেশন */
+button, .btn, .cart-btn, .copy-btn, .filter-btn, .qty-btn, a.btn {
+  transition: transform 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.2s ease, background-color 0.2s ease !important;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* বাটনে ক্লিক করার সাথে সাথে স্প্রিং এর মতো কাঁপবে/দাববে */
+button:active, .btn:active, .cart-btn:active, .copy-btn:active, .filter-btn:active, .qty-btn:active, a.btn:active {
+  transform: scale(0.92) translateY(2px) !important;
+  filter: brightness(1.2);
+}
+
+/* বিশেষ কনফার্মেশন বাটনে ভাইব্র্যান্ট গ্লো স্পার্ক */
+.vibrant-pop {
+  animation: buttonPulseVibrant 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes buttonPulseVibrant {
+  0% { transform: scale(1); }
+  40% { transform: scale(0.88) rotate(-1deg); box-shadow: 0 0 25px rgba(234, 179, 8, 0.8); }
+  75% { transform: scale(1.06) rotate(1deg); }
+  100% { transform: scale(1) rotate(0deg); }
+}
