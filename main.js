@@ -562,3 +562,50 @@ processOrder = function(e) {
     oldProcessOrder(e);
   }
 };
+
+/* =========================================================
+   GLOBAL CLICK SOUND & VIBRANT HAPTIC FEEDBACK
+   ========================================================= */
+
+// প্রিমিয়াম অ্যাপ-লাইক ক্লিক সাউন্ড (Web Audio API)
+function playButtonClickSound() {
+  try {
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+
+    osc.type = 'sine';
+    
+    // ক্রিস্প মিষ্টি সাউন্ড ফ্রিকোয়েন্সি (High Pitch Soft Pop)
+    osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(400, audioCtx.currentTime + 0.04);
+
+    gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.04);
+
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+
+    osc.start();
+    osc.stop(audioCtx.currentTime + 0.04);
+  } catch(e) {}
+}
+
+// গ্লোবাল ক্লিক লিসেনার — যেকোনো বাটনে চাপ দিলেই সাউন্ড ও ভাইব্রেশন হবে
+document.addEventListener('click', function(e) {
+  const target = e.target.closest('button, .btn, .cart-btn, .copy-btn, .filter-btn, .qty-btn, .menu-toggle');
+  
+  if (target) {
+    // ১. সাউন্ড প্লে হবে
+    playButtonClickSound();
+
+    // ২. বাটনে ভাইব্র্যান্ট অ্যানিমেশন ক্লাস যুক্ত হবে
+    target.classList.add('vibrant-pop');
+    setTimeout(() => target.classList.remove('vibrant-pop'), 350);
+
+    // ৩. মোবাইল ডিভাইসে হালকা কাঁপবে (Haptic Vibration)
+    if (navigator.vibrate) {
+      navigator.vibrate(25); // ২৫ মিলিসেকেন্ড হালকা ভাইব্রেশন
+    }
+  }
+});
