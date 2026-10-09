@@ -123,7 +123,7 @@ function saveCart(cart) {
   updateCartBadge();
 }
 
-function addToCart(id, qty) {
+function playCartAddSound() addToCart(id, qty) {
   qty = qty || 1;
   const product = PRODUCTS.find(p => p.id === id);
   if (!product) return;
