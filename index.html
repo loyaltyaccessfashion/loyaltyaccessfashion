@@ -46,24 +46,53 @@
     </div>
   </section>
 
-  <!-- ফিচার স্ট্রিপ -->
+    <!-- লাইটিং অ্যানিমেটেড ক্লিক্যাবল ফিচার কার্ডস -->
   <section class="container section-sm">
     <div class="feature-strip">
-      <div class="feature-pill">
+      
+      <!-- ১. ডেলিভারি কার্ড -->
+      <div class="feature-card-glow" onclick="openFeatureModal('delivery')">
         <span class="icon">🚚</span>
-        <div><h4>সারাদেশে ডেলিভারি</h4><p>ঢাকায় ১-২ দিন, বাইরে ২-৪ দিন</p></div>
+        <div style="width: 100%;">
+          <h4>সারাদেশে ডেলিভারি <span class="arrow-click">➔</span></h4>
+          <p>ঢাকায় ১-২ দিন, বাইরে ২-৪ দিন</p>
+        </div>
       </div>
-      <div class="feature-pill">
+
+      <!-- ২. ক্যাশ অন ডেলিভারি কার্ড -->
+      <div class="feature-card-glow" onclick="openFeatureModal('cod')">
         <span class="icon">💵</span>
-        <div><h4>ক্যাশ অন ডেলিভারি</h4><p>পণ্য হাতে পেয়ে টাকা দিন</p></div>
+        <div style="width: 100%;">
+          <h4>ক্যাশ অন ডেলিভারি <span class="arrow-click">➔</span></h4>
+          <p>পণ্য হাতে পেয়ে টাকা দিন</p>
+        </div>
       </div>
-      <div class="feature-pill">
+
+      <!-- ৩. ইজি এক্সচেঞ্জ কার্ড -->
+      <div class="feature-card-glow" onclick="openFeatureModal('exchange')">
         <span class="icon">🔄</span>
-        <div><h4>ইজি এক্সচেঞ্জ</h4><p>সমস্যা থাকলে ২৪ ঘণ্টায় বদলে দেব</p></div>
+        <div style="width: 100%;">
+          <h4>ইজি এক্সচেঞ্জ <span class="arrow-click">➔</span></h4>
+          <p>সমস্যা থাকলে ২৪ ঘণ্টায় বদলে দেব</p>
+        </div>
       </div>
+
     </div>
   </section>
 
+  <!-- ফিচার ক্লিক ইন্টারেক্টিভ পপ-আপ মোডাল -->
+  <div id="featureModalOverlay" class="feature-modal-overlay" onclick="closeFeatureModal(event)">
+    <div class="feature-modal-card" onclick="event.stopPropagation()">
+      <span class="feature-modal-close" onclick="closeFeatureModalDirect()">&times;</span>
+      <div id="modalIcon" style="font-size: 3rem; margin-bottom: 10px;">🚚</div>
+      <h3 id="modalTitle" style="color: #fff; font-size: 1.3rem; font-weight: 800; margin-bottom: 8px;">ডেলিভারি পলিসি</h3>
+      <p id="modalDesc" style="color: var(--muted); font-size: 0.88rem; line-height: 1.6; margin-bottom: 20px;">
+        আমরা দ্রুততম সময়ে আপনার কাঙ্ক্ষিত পণ্যটি সঠিক জায়গায় পৌঁছে দিতে প্রতিশ্রুতিবদ্ধ।
+      </p>
+      <button onclick="closeFeatureModalDirect()" class="btn btn-gold btn-block">ঠিক আছে, বুঝতে পেরেছি ✅</button>
+    </div>
+  </div>
+  
   <!-- ফিচারড প্রোডাক্ট -->
   <section class="section container">
     <h2 class="section-title">আমাদের <span class="text-gold">কালেকশন</span></h2>
