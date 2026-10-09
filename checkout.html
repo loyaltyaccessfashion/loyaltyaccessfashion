@@ -65,6 +65,17 @@
           </select>
         </div>
 
+        <!-- পেমেন্ট বাটন ১: ম্যানুয়াল পেমেন্ট -->
+        <button type="submit" class="btn btn-gold btn-block" style="margin-top:20px;">
+          💳 ম্যানুয়াল পেমেন্ট (বিকাশ/নগদ/COD) ➔
+        </button>
+
+        <div style="text-align: center; margin: 12px 0 6px; font-size: 0.78rem; color: var(--muted);">- অথবা সরাসরি অটো পেমেন্ট -</div>
+
+        <!-- পেমেন্ট বাটন ২: অটো পেমেন্ট -->
+        <button type="button" onclick="goToUddoktaPayStep(event)" class="btn btn-uddokta btn-block">
+          ⚡ উদ্যোক্তাপে (অটো পেমেন্ট করুন) ➔
+        </button>
       </form>
 
       <!-- সামারি ও কুপন বক্স -->
@@ -90,20 +101,7 @@
       </aside>
     </div>
   </section>
-  
-        <!-- প্রধান ম্যানুয়াল পেমেন্ট বাটন -->
-  <!-- নতুন উদ্যোক্তাপে বাটন -->
-        <button type="button" onclick="goToUddoktaPayStep(event)" class="btn btn-uddokta btn-block">
-          ⚡ উদ্যোক্তাপে (সরাসরি অটো পেমেন্ট করুন) ➔
-        </button>
-  
-  <!-- ডিভাইডার -->
-        <div style="text-align: center; margin: 12px 0 6px; font-size: 0.8rem; color: var(--muted);">- অথবা সরাসরি অটো পেমেন্ট -</div>
-  
-        <button type="submit" class="btn btn-gold btn-block" style="margin-top:20px;">
-          💳 ম্যানুয়াল পেমেন্ট (বিকাশ/নগদ/রকেট/পাঠাও পে/COD) ➔
-        </button>
-    
+
   <footer class="site-footer">
     <div class="container footer-grid">
       <div>
