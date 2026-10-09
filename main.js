@@ -467,3 +467,97 @@ function completeOrderFinal(e) {
 }
 
 updateCartBadge();
+
+/* =========================================================
+   UDDOKTAPAY DEDICATED AUTOMATED PAYMENT FLOW
+   ========================================================= */
+
+// চেকআউট থেকে উদ্যোক্তাপে পেজে রিডাইরেক্ট
+function goToUddoktaPayStep(e) {
+  if (e) e.preventDefault();
+  
+  // ফর্ম ভ্যালিডেশন চেক
+  const nameEl = document.getElementById('custName');
+  const phoneEl = document.getElementById('custPhone');
+  const addressEl = document.getElementById('custAddress');
+
+  if (!nameEl.value.trim() || !phoneEl.value.trim() || !addressEl.value.trim()) {
+    showToast('দয়া করে আপনার নাম, ফোন নম্বর ও ঠিকানা পূরণ করুন!');
+    return;
+  }
+
+  const cart = getCart();
+  if (cart.length === 0) { showToast('আপনার কার্ট খালি!'); return; }
+
+  const name = nameEl.value.trim();
+  const phone = phoneEl.value.trim();
+  const address = addressEl.value.trim();
+  const area = document.getElementById('deliveryArea').value;
+  const fee = area === 'inside' ? DELIVERY.inside : DELIVERY.outside;
+  const subtotal = cartSubtotal();
+  const discount = typeof appliedCoupon !== 'undefined' && appliedCoupon ? appliedCoupon.discount : 0;
+  const total = (subtotal + fee) - discount;
+
+  const orderId = 'LA-' + Math.floor(10000 + Math.random() * 90000);
+
+  const pendingData = {
+    orderId: orderId, name: name, phone: phone, address: address,
+    deliveryArea: area === 'inside' ? 'ঢাকার ভিতরে' : 'ঢাকার বাইরে',
+    deliveryFee: fee, subtotal: subtotal, discount: discount, total: total, items: cart
+  };
+
+  localStorage.setItem('pending_order_data', JSON.stringify(pendingData));
+  showToast('উদ্যোক্তাপে পেজে নিয়ে যাওয়া হচ্ছে...');
+
+  setTimeout(() => {
+    window.location.href = 'uddoktapay.html';
+  }, 400);
+}
+
+// uddoktapay.html ইনিশিয়ালাইজেশান
+function initUddoktaPayPage() {
+  const dataRaw = localStorage.getItem('pending_order_data');
+  if (!dataRaw) { window.location.href = 'cart.html'; return; }
+
+  const data = JSON.parse(dataRaw);
+  const idEl = document.getElementById('upBarOrderId');
+  const totEl = document.getElementById('upBarTotal');
+  if (idEl) idEl.textContent = data.orderId;
+  if (totEl) totEl.textContent = '৳ ' + data.total;
+}
+
+// UddoktaPay পেমেন্ট সাবমিট ও হোয়াটসঅ্যাপ মেসেজ
+function completeUddoktaPayOrder() {
+  const dataRaw = localStorage.getItem('pending_order_data');
+  if (!dataRaw) return;
+
+  const data = JSON.parse(dataRaw);
+
+  let msg = '🛒 *নতুন অর্ডার (UddoktaPay Auto Payment) — Loyalty Access*\n';
+  msg += '🧾 Order ID: *' + data.orderId + '*\n\n';
+  msg += '👤 নাম: ' + data.name + '\n';
+  msg += '📞 ফোন: ' + data.phone + '\n';
+  msg += '📍 ঠিকানা: ' + data.address + '\n';
+  msg += '🚚 ডেলিভারি: ' + data.deliveryArea + '\n\n';
+  msg += '📦 *প্রোডাক্ট তালিকা:*\n';
+  data.items.forEach(i => {
+    msg += '• ' + i.name + ' × ' + i.qty + ' = ৳' + (i.price * i.qty) + '\n';
+  });
+  msg += '\n💰 সাবটোটাল: ৳' + data.subtotal + '\n';
+  msg += '🚚 ডেলিভারি চার্জ: ৳' + data.deliveryFee + '\n';
+  if (data.discount > 0) msg += '🎁 কুপন ছাড়: -৳' + data.discount + '\n';
+  msg += '💵 *সর্বমোট বিল: ৳' + data.total + '*\n\n';
+  msg += '💳 *পেমেন্ট স্ট্যাটাস:* UddoktaPay Gateway (পেন্ডিং/কমপ্লিট)\n';
+
+  try {
+    const orders = JSON.parse(localStorage.getItem(ORDERS_KEY) || '{}');
+    orders[data.orderId] = { code: 1, date: new Date().toLocaleString() };
+    localStorage.setItem(ORDERS_KEY, JSON.stringify(orders));
+  } catch (err) {}
+
+  setTimeout(() => {
+    window.open('https://wa.me/' + WHATSAPP_NUMBER + '?text=' + encodeURIComponent(msg), '_blank');
+    localStorage.removeItem(CART_KEY);
+    localStorage.removeItem('pending_order_data');
+  }, 1000);
+}
