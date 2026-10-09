@@ -1,6 +1,6 @@
 /* =========================================================
-   LOYALTY ACCESS FASHION — CORE MAIN.JS
-   (Cart, Sound, Animation, Coupon, 2-Step Payment Logic)
+   LOYALTY ACCESS FASHION — COMPLETE MAIN.JS
+   (Product Display, Cart, Sound, Coupon, 2-Step Payment)
    ========================================================= */
 
 const CART_KEY = 'laf_cart_v1';
@@ -16,7 +16,35 @@ const VALID_COUPONS = {
   'LAF100': 100
 };
 
-/* ---------------- 1. AUDIO & BUTTON ANIMATION ENGINE ---------------- */
+/* ---------------- 1. PRODUCT DISPLAY ENGINE ---------------- */
+function productCardHTML(p) {
+  const oldPrice = p.oldPrice ? `<span class="price-old">৳ ${p.oldPrice}</span>` : '';
+  const badge = p.badge ? `<span class="product-badge">${p.badge}</span>` : '';
+  const priceHtml = `<span class="price">৳ ${p.price}</span>${oldPrice}`;
+
+  return `
+    <article class="product-card">
+      <div class="product-thumb">
+        <img src="${p.image}" alt="${p.name}" loading="lazy">
+        ${badge}
+      </div>
+      <div class="product-body">
+        <p class="product-cat">${p.category}</p>
+        <h3 class="product-title">${p.name}</h3>
+        <div class="price-row">${priceHtml}</div>
+        <button class="btn btn-outline btn-block btn-sm" onclick="addToCart(${p.id})">🛒 অর্ডার করুন</button>
+      </div>
+    </article>`;
+}
+
+function renderProductGrid(selector, list) {
+  const el = document.querySelector(selector);
+  if (!el) return;
+  const data = list || (typeof PRODUCTS !== 'undefined' ? PRODUCTS : []);
+  el.innerHTML = data.map(productCardHTML).join('');
+}
+
+/* ---------------- 2. AUDIO & BUTTON ANIMATION ENGINE ---------------- */
 let globalAudioCtx = null;
 
 function getAudioContext() {
@@ -84,7 +112,7 @@ document.addEventListener('pointerdown', function(e) {
   }
 });
 
-/* ---------------- 2. CART MANAGEMENT ---------------- */
+/* ---------------- 3. CART MANAGEMENT ---------------- */
 function getCart() {
   try { return JSON.parse(localStorage.getItem(CART_KEY)) || []; }
   catch (e) { return []; }
@@ -130,7 +158,7 @@ function updateCartBadge() {
   if (el) el.textContent = cartCount();
 }
 
-/* ---------------- 3. TOAST & MOBILE MENU ---------------- */
+/* ---------------- 4. TOAST & MOBILE MENU ---------------- */
 let toastTimer = null;
 function showToast(msg) {
   let toast = document.getElementById('globalToast');
@@ -158,7 +186,7 @@ function toggleMenu() {
   }
 }
 
-/* ---------------- 4. COUPON ENGINE ---------------- */
+/* ---------------- 5. COUPON ENGINE ---------------- */
 function triggerConfetti() {
   let canvas = document.getElementById('canvas-confetti');
   if(!canvas) {
@@ -215,7 +243,52 @@ function applyCouponCode() {
   }
 }
 
-/* ---------------- 5. CHECKOUT PAGE (STEP 1) ---------------- */
+/* ---------------- 6. CART PAGE RENDER ---------------- */
+function renderCartPage() {
+  const wrap = document.getElementById('cartItems');
+  if (!wrap) return;
+  const cart = getCart();
+
+  if (cart.length === 0) {
+    wrap.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon">🛍️</div>
+        <h3>আপনার কার্ট খালি</h3>
+        <p>পছন্দের প্রোডাক্ট যোগ করতে কালেকশন পেজে যান।</p>
+        <a href="shop.html" class="btn btn-gold">কালেকশন দেখুন</a>
+      </div>`;
+  } else {
+    wrap.innerHTML = cart.map(item => `
+      <div class="cart-row">
+        <img src="${item.image}" alt="${item.name}">
+        <div class="cart-info">
+          <h4>${item.name}</h4>
+          <p class="price">৳ ${item.price}</p>
+          <div class="qty-box">
+            <button class="qty-btn" onclick="setQty(${item.id}, ${item.qty - 1})">−</button>
+            <span>${item.qty}</span>
+            <button class="qty-btn" onclick="setQty(${item.id}, ${item.qty + 1})">+</button>
+          </div>
+        </div>
+        <div class="cart-right">
+          <button class="remove-btn" onclick="removeFromCart(${item.id})" title="Remove">✕</button>
+          <strong>৳ ${item.price * item.qty}</strong>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  const sub = document.getElementById('cartSubtotal');
+  if (sub) sub.textContent = '৳ ' + cartSubtotal();
+
+  const btn = document.getElementById('checkoutBtn');
+  if (btn) {
+    if (cart.length === 0) btn.setAttribute('disabled', '');
+    else btn.removeAttribute('disabled');
+  }
+}
+
+/* ---------------- 7. CHECKOUT PAGE (STEP 1) ---------------- */
 function renderCheckoutPage() {
   const wrap = document.getElementById('checkoutItems');
   if (!wrap) return;
@@ -280,7 +353,7 @@ function goToPaymentStep(e) {
   }, 400);
 }
 
-/* ---------------- 6. MULTI-GATEWAY PAYMENT (STEP 2) ---------------- */
+/* ---------------- 8. MULTI-GATEWAY PAYMENT (STEP 2) ---------------- */
 function initPaymentPage() {
   const dataRaw = localStorage.getItem('pending_order_data');
   if (!dataRaw) { window.location.href = 'cart.html'; return; }
@@ -291,17 +364,14 @@ function initPaymentPage() {
   if (idEl) idEl.textContent = data.orderId;
   if (totEl) totEl.textContent = '৳ ' + data.total;
   
-  // ডিফল্ট বিকাশ প্যানেল সেট
   selectGateway('bkash', document.querySelector('.gateway-tab'));
 }
 
 function selectGateway(gw, element) {
   currentSelectedGateway = gw;
 
-  // সব ট্যাব থেকে active দূর করা
   document.querySelectorAll('.gateway-tab').forEach(t => t.classList.remove('active'));
   
-  // ক্লিক করা ট্যাবে active যুক্ত করা
   if(element) {
     element.classList.add('active');
   } else {
@@ -314,16 +384,13 @@ function selectGateway(gw, element) {
     else if(gw === 'cod' && tabs[5]) tabs[5].classList.add('active');
   }
 
-  // সব প্যানেল বন্ধ করা
   document.querySelectorAll('.gateway-panel').forEach(p => p.style.display = 'none');
 
-  // নির্দিষ্ট প্যানেল চালু করা
   const targetPanel = document.getElementById('panel-' + gw);
   if (targetPanel) {
     targetPanel.style.display = 'block';
   }
 
-  // TrxID ফিল্ড নিয়ন্ত্রণ
   const trxFields = document.getElementById('trxFields');
   if (trxFields) {
     if (gw === 'cod' || gw === 'uddoktapay') {
