@@ -1,1 +1,119 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0A0A0A">
+  <title>UddoktaPay অটো পেমেন্ট — Loyalty Access Fashion</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .uddokta-box {
+      background: linear-gradient(135deg, rgba(234, 179, 8, 0.12) 0%, rgba(20, 20, 20, 0.95) 100%);
+      border: 1.5px solid rgba(234, 179, 8, 0.4);
+      border-radius: var(--radius);
+      padding: 28px;
+      text-align: center;
+      margin-top: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+    }
+    .uddokta-badge {
+      display: inline-block;
+      background: #eab308;
+      color: #000;
+      font-weight: 800;
+      font-size: 0.75rem;
+      padding: 4px 14px;
+      border-radius: 999px;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+    }
+    .pay-amount-display {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: #22c55e;
+      margin: 10px 0;
+    }
+  </style>
+</head>
+<body>
 
+  <div class="announce">⚡ সারা দেশে ক্যাশ অন ডেলিভারি | 📞 WhatsApp: +8801601866686 | ⭐ প্রিমিয়াম কোয়ালিটি গ্যারান্টি</div>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="index.html" class="logo">
+        <span class="logo-main">LOYALTY ACCESS</span>
+        <span class="logo-sub">Luxury Lifestyle Store</span>
+      </a>
+      <nav class="main-nav" id="mainNav">
+        <a href="index.html">হোম</a>
+        <a href="shop.html">কালেকশন</a>
+        <a href="gift-card.html">🎁 গিফট কার্ড</a>
+        <a href="track-order.html">ট্র্যাক অর্ডার</a>
+        <a href="contact.html">যোগাযোগ</a>
+      </nav>
+      <div class="header-actions">
+        <a href="cart.html" class="cart-btn" title="কার্ট">🛍️<span class="cart-badge" id="cartCount">0</span></a>
+        <button class="menu-toggle" onclick="toggleMenu()" aria-label="Menu">☰</button>
+      </div>
+    </div>
+  </header>
+
+  <section class="container section" style="max-width: 650px;">
+    <div class="page-head">
+      <h1>অটোমেটিক <span class="text-gold">পেমেন্ট গেটওয়ে</span></h1>
+      <p>UddoktaPay-এর মাধ্যমে ১-ক্লিকে বিকাশ, নগদ, রকেট বা কার্ডে পেমেন্ট করুন</p>
+    </div>
+
+    <div class="uddokta-box">
+      <span class="uddokta-badge">⚡ SECURE UDDOKTAPAY GATEWAY</span>
+      <p style="color:var(--muted); font-size:0.85rem;">অর্ডার আইডি: <strong id="upBarOrderId" style="color:var(--gold);">LA-XXXXX</strong></p>
+      
+      <div class="pay-amount-display" id="upBarTotal">৳ 0</div>
+      <p style="color:var(--muted); font-size:0.8rem; margin-bottom: 22px;">বিকাশ, নগদ, রকেট, কার্ড বা ইন্টারনেট ব্যাংকিং সমর্থিত</p>
+
+      <!-- আসল UddoktaPay পেমেন্ট বাটন (এখানে আপনার UddoktaPay Payment URL বসাবেন) -->
+      <a id="uddoktaPayDirectBtn" href="https://loyaltyaccess.paymently.io/paymentlink/default/BDT" target="_blank" onclick="completeUddoktaPayOrder()" class="btn btn-gold btn-block" style="font-size:1.05rem; padding: 14px;">
+        💳 এখনই অটো পেমেন্ট করুন (UddoktaPay) ➔
+      </a>
+
+      <div style="margin-top:20px; font-size:0.78rem; color:var(--muted); border-t: 1px solid var(--border); pt-3;">
+        পেমেন্ট শেষ হলে স্বয়ংক্রিয়ভাবে হোয়াটসঅ্যাপে অর্ডারের কনফার্মেশন চলে যাবে।
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <p class="footer-logo">LOYALTY ACCESS</p>
+        <p class="footer-tag">LUXURY LIFESTYLE STORE</p>
+        <p class="footer-desc">প্রিমিয়াম ওয়াচ, অ্যানিমে টি-শার্ট ও অ্যাস্থেটিক হোম ডেকর — সব এক জায়গায়। সারা বাংলাদেশে ক্যাশ অন ডেলিভারি।</p>
+      </div>
+      <div>
+        <h4>গুরুত্বপূর্ণ লিংক</h4>
+        <ul>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="gift-card.html">Gift Cards</a></li>
+          <li><a href="contact.html">Contact Us</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>যোগাযোগ</h4>
+        <ul>
+          <li>📱 <a href="https://wa.me/8801601866686" target="_blank">WhatsApp: +8801601866686</a></li>
+          <li>📘 <a href="https://facebook.com" target="_blank">Facebook Page</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2025 Loyalty Access Fashion — All Rights Reserved.</div>
+  </footer>
+
+  <script src="products.js"></script>
+  <script src="orders.js"></script>
+  <script src="main.js"></script>
+  <script>
+    initUddoktaPayPage();
+  </script>
+</body>
+</html>
