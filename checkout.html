@@ -20,6 +20,7 @@
       <nav class="main-nav" id="mainNav">
         <a href="index.html">হোম</a>
         <a href="shop.html">কালেকশন</a>
+        <a href="gift-card.html">🎁 গিফট কার্ড</a>
         <a href="track-order.html">ট্র্যাক অর্ডার</a>
         <a href="contact.html">যোগাযোগ</a>
       </nav>
@@ -32,14 +33,14 @@
 
   <section class="container">
     <div class="page-head">
-      <h1>চেক<span class="text-gold">আউট</span></h1>
-      <p>আপনার ডেলিভারি তথ্য দিয়ে অর্ডার কনফার্ম করুন</p>
+      <h1>ধাপ ১: <span class="text-gold">ডেলিভারি তথ্য</span></h1>
+      <p>আপনার নাম ও ঠিকানা দিয়ে পেমেন্ট ধাপে এগিয়ে যান</p>
     </div>
 
     <div class="cart-layout">
-      <!-- ফর্ম -->
-      <form id="checkout-form" onsubmit="processOrder(event)" class="summary-box" style="position:static;">
-        <h3>👤 ডেলিভারি তথ্য</h3>
+      <!-- ফর্ম (এখানে কোনো হোয়াটসঅ্যাপ রিডাইরেক্ট হবে না) -->
+      <form id="checkout-form" onsubmit="goToPaymentStep(event)" class="summary-box" style="position:static;">
+        <h3>👤 কাস্টমার ইনফরমেশন</h3>
 
         <div class="form-group">
           <label>আপনার নাম *</label>
@@ -63,28 +64,13 @@
             <option value="outside">ঢাকার বাইরে (৳ 120)</option>
           </select>
         </div>
-        
-        <!-- পেমেন্ট মেথড বাটন -->
-        <div class="form-group" style="margin-top: 18px;">
-          <label style="font-weight:700; color:#fff;">পেমেন্ট পদ্ধতি নির্বাচন করুন *</label>
-          <div style="display: flex; gap: 12px; margin-top: 8px;">
-            <label class="pay-radio-card">
-              <input type="radio" name="paymentType" value="cod" checked>
-              <span>💵 ক্যাশ অন ডেলিভারি</span>
-            </label>
-            <label class="pay-radio-card">
-              <input type="radio" name="paymentType" value="online">
-              <span>📱 বিকাশ/নগদ (অনলাইন)</span>
-            </label>
-          </div>
-        </div>
 
-        <button type="submit" class="btn btn-gold btn-block" style="margin-top:8px;">📱 WhatsApp-এ অর্ডার কনফার্ম করুন</button>
-        <p style="text-align:center; font-size:0.72rem; color:var(--muted); margin-top:10px;">অর্ডার কনফার্ম করলে WhatsApp-এ আমাদের কাছে চলে আসবে। পেমেন্ট: ক্যাশ অন ডেলিভারি।</p>
+        <button type="submit" class="btn btn-gold btn-block" style="margin-top:20px;">
+          💳 পেমেন্ট ধাপে এগিয়ে যান ➔
+        </button>
       </form>
-      
-      
-<!-- ANIMATED COUPON BOX -->
+
+      <!-- ANIMATED COUPON BOX -->
 <div class="coupon-animated-box">
   <label style="font-size:0.78rem; color:var(--gold); font-weight:700; display:block; margin-bottom:6px;">
     🎁 কুপন / গিফট কার্ড ব্যবহার করুন:
@@ -118,10 +104,9 @@
         <h4>গুরুত্বপূর্ণ লিংক</h4>
         <ul>
           <li><a href="about.html">About Us</a></li>
+          <li><a href="payment.html">পেমেন্ট পেজ</a></li>
+          <li><a href="gift-card.html">Gift Cards</a></li>
           <li><a href="contact.html">Contact Us</a></li>
-          <li><a href="privacy.html">Privacy Policy</a></li>
-          <li><a href="exchange.html">Exchange Policy</a></li>
-          <li><a href="track-order.html">Track Order</a></li>
         </ul>
       </div>
       <div>
@@ -129,7 +114,6 @@
         <ul>
           <li>📱 <a href="https://wa.me/8801601866686" target="_blank">WhatsApp: +8801601866686</a></li>
           <li>📘 <a href="https://facebook.com" target="_blank">Facebook Page</a></li>
-          <li>🚚 সারা বাংলাদেশে ডেলিভারি</li>
         </ul>
       </div>
     </div>
