@@ -516,3 +516,153 @@ input, select, textarea { font-family: inherit; }
     gap: 12px;
   }
 }
+
+/* ==========================================================
+   UNIVERSAL LUXURY GOLDEN LIGHTING BORDER ENGINE
+   ========================================================== */
+
+/* সার্বজনীন লাইটিং বর্ডার ক্লাস */
+.lux-glow-box {
+  position: relative !important;
+  background: #141414 !important;
+  border-radius: 16px !important;
+  overflow: hidden !important;
+  z-index: 1 !important;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5) !important;
+}
+
+.lux-glow-box::before {
+  content: '' !important;
+  position: absolute !important;
+  top: -50% !important;
+  left: -50% !important;
+  width: 200% !important;
+  height: 200% !important;
+  background: conic-gradient(transparent, rgba(234, 179, 8, 0.9), transparent 30%) !important;
+  animation: rotateLightingBorder 3.5s linear infinite !important;
+  z-index: -2 !important;
+}
+
+.lux-glow-box::after {
+  content: '' !important;
+  position: absolute !important;
+  inset: 2px !important;
+  background: #141414 !important;
+  border-radius: 14px !important;
+  z-index: -1 !important;
+}
+
+/* ১. কুপন বক্সে লাইটিং */
+.coupon-animated-box {
+  position: relative !important;
+  background: #141414 !important;
+  border-radius: 14px !important;
+  overflow: hidden !important;
+  z-index: 1 !important;
+  padding: 14px !important;
+  margin: 16px 0 !important;
+}
+.coupon-animated-box::before {
+  content: '' !important;
+  position: absolute !important;
+  top: -50% !important;
+  left: -50% !important;
+  width: 200% !important;
+  height: 200% !important;
+  background: conic-gradient(transparent, rgba(234, 179, 8, 0.85), transparent 30%) !important;
+  animation: rotateLightingBorder 4s linear infinite !important;
+  z-index: -2 !important;
+}
+.coupon-animated-box::after {
+  content: '' !important;
+  position: absolute !important;
+  inset: 1.5px !important;
+  background: #121212 !important;
+  border-radius: 12.5px !important;
+  z-index: -1 !important;
+}
+
+/* ২. পেমেন্ট অর্ডার সামারি বারে লাইটিং */
+.pay-order-summary-bar {
+  position: relative !important;
+  background: #141414 !important;
+  border-radius: 16px !important;
+  overflow: hidden !important;
+  z-index: 1 !important;
+}
+.pay-order-summary-bar::before {
+  content: '' !important;
+  position: absolute !important;
+  top: -50% !important;
+  left: -50% !important;
+  width: 200% !important;
+  height: 200% !important;
+  background: conic-gradient(transparent, rgba(34, 197, 94, 0.85), transparent 30%) !important;
+  animation: rotateLightingBorder 4s linear infinite !important;
+  z-index: -2 !important;
+}
+.pay-order-summary-bar::after {
+  content: '' !important;
+  position: absolute !important;
+  inset: 1.5px !important;
+  background: #121212 !important;
+  border-radius: 14.5px !important;
+  z-index: -1 !important;
+}
+
+/* ৩. উদ্দোক্তাপে অটো পেমেন্ট বক্সে লাইটিং */
+.uddokta-box {
+  position: relative !important;
+  background: #141414 !important;
+  border-radius: 20px !important;
+  overflow: hidden !important;
+  z-index: 1 !important;
+  padding: 28px !important;
+}
+.uddokta-box::before {
+  content: '' !important;
+  position: absolute !important;
+  top: -50% !important;
+  left: -50% !important;
+  width: 200% !important;
+  height: 200% !important;
+  background: conic-gradient(transparent, rgba(234, 179, 8, 0.95), transparent 30%) !important;
+  animation: rotateLightingBorder 3s linear infinite !important;
+  z-index: -2 !important;
+}
+.uddokta-box::after {
+  content: '' !important;
+  position: absolute !important;
+  inset: 2px !important;
+  background: #121212 !important;
+  border-radius: 18px !important;
+  z-index: -1 !important;
+}
+
+/* ৪. হোমপেজের অফার ব্যানার (CTA Banner) লাইটিং */
+.cta-banner {
+  position: relative !important;
+  background: #141414 !important;
+  border-radius: 20px !important;
+  overflow: hidden !important;
+  z-index: 1 !important;
+}
+.cta-banner::before {
+  content: '' !important;
+  position: absolute !important;
+  top: -50% !important;
+  left: -50% !important;
+  width: 200% !important;
+  height: 200% !important;
+  background: conic-gradient(transparent, rgba(234, 179, 8, 0.8), transparent 25%) !important;
+  animation: rotateLightingBorder 4.5s linear infinite !important;
+  z-index: -2 !important;
+}
+.cta-banner::after {
+  content: '' !important;
+  position: absolute !important;
+  inset: 2px !important;
+  background: #141414 !important;
+  border-radius: 18px !important;
+  z-index: -1 !important;
+}
