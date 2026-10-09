@@ -363,3 +363,156 @@ input, select, textarea { font-family: inherit; }
     gap: 12px !important;
   }
 }
+
+/* ==========================================================
+   ANIMATED GLOWING LIGHTING BORDER FEATURE CARDS
+   ========================================================== */
+
+.feature-strip {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+/* চারপাশে আলো ঘোরার অ্যানিমেটেড কার্ড */
+.feature-card-glow {
+  position: relative;
+  background: #141414;
+  border-radius: 16px;
+  padding: 18px 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  cursor: pointer;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  z-index: 1;
+}
+
+/* ঘোরন্ত লাইটের ব্যাকগ্রাউন্ড (Conic Gradient) */
+.feature-card-glow::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: conic-gradient(transparent, rgba(234, 179, 8, 0.9), transparent 30%);
+  animation: rotateLightingBorder 3.5s linear infinite;
+  z-index: -2;
+}
+
+/* কার্ডের ভেতরের কালো অংশ */
+.feature-card-glow::after {
+  content: '';
+  position: absolute;
+  inset: 2px;
+  background: #141414;
+  border-radius: 14px;
+  z-index: -1;
+  transition: background 0.3s;
+}
+
+@keyframes rotateLightingBorder {
+  100% { transform: rotate(360deg); }
+}
+
+/* হভার ও ক্লিক ইফেক্ট */
+.feature-card-glow:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 10px 25px rgba(234, 179, 8, 0.35);
+}
+
+.feature-card-glow:hover::after {
+  background: #1a180d;
+}
+
+.feature-card-glow .icon {
+  font-size: 1.8rem;
+  flex-shrink: 0;
+}
+
+.feature-card-glow h4 {
+  font-size: 0.92rem;
+  font-weight: 800;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.feature-card-glow h4 .arrow-click {
+  font-size: 0.75rem;
+  color: var(--gold);
+  margin-left: 6px;
+  transition: transform 0.2s;
+}
+
+.feature-card-glow:hover .arrow-click {
+  transform: translateX(4px);
+}
+
+.feature-card-glow p {
+  font-size: 0.75rem;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+/* FEATURE INFO MODAL POPUP */
+.feature-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(10px);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.feature-modal-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.feature-modal-card {
+  background: #141414;
+  border: 1.5px solid var(--gold);
+  border-radius: 20px;
+  padding: 28px 24px;
+  max-width: 450px;
+  width: 100%;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 20px 50px rgba(234, 179, 8, 0.3);
+  transform: scale(0.85);
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.feature-modal-overlay.active .feature-modal-card {
+  transform: scale(1);
+}
+
+.feature-modal-close {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  font-size: 1.2rem;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.feature-modal-close:hover {
+  color: var(--gold);
+}
+
+@media (max-width: 760px) {
+  .feature-strip {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+}
