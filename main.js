@@ -561,3 +561,115 @@ function completeUddoktaPayOrder() {
     localStorage.removeItem('pending_order_data');
   }, 1000);
 }
+
+/* =========================================================
+   CART ADD SOUND EFFECT & ORDER SUCCESS REDIRECT
+   ========================================================= */
+
+// কার্টে জিনিস যুক্ত করলে "Ka-Ching" বাই/সেল সাউন্ড বাজবে
+function playCartAddSound() {
+  try {
+    const ctx = getAudioContext();
+    if (!ctx) return;
+
+    // টোন ১ (High Pitch)
+    const osc1 = ctx.createOscillator();
+    const gain1 = ctx.createGain();
+    osc1.type = 'sine';
+    osc1.frequency.setValueAtTime(987.77, ctx.currentTime); // B5 Note
+    gain1.gain.setValueAtTime(0.2, ctx.currentTime);
+    gain1.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.1);
+    osc1.connect(gain1);
+    gain1.connect(ctx.destination);
+    osc1.start(ctx.currentTime);
+    osc1.stop(ctx.currentTime + 0.1);
+
+    // টোন ২ (Higher Pitch - Cash Register Feeling)
+    const osc2 = ctx.createOscillator();
+    const gain2 = ctx.createGain();
+    osc2.type = 'sine';
+    osc2.frequency.setValueAtTime(1318.51, ctx.currentTime + 0.08); // E6 Note
+    gain2.gain.setValueAtTime(0.25, ctx.currentTime + 0.08);
+    gain2.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.25);
+    osc2.connect(gain2);
+    gain2.connect(ctx.destination);
+    osc2.start(ctx.currentTime + 0.08);
+    osc2.stop(ctx.currentTime + 0.25);
+  } catch(e) {}
+}
+
+// addToCart ওভাররাইড করে সাউন্ড যুক্ত করা
+const originalAddToCart = addToCart;
+addToCart = function(id, qty) {
+  playCartAddSound(); // কার্ট সাউন্ড চলবে
+  originalAddToCart(id, qty);
+};
+
+// ফাইনাল পেমেন্ট সম্পন্ন হলে সাকসেস পেজে রিডাইরেক্ট করবে
+const originalCompleteOrderFinal = completeOrderFinal;
+completeOrderFinal = function(e) {
+  if (e) e.preventDefault();
+  const dataRaw = localStorage.getItem('pending_order_data');
+  if (!dataRaw) return;
+
+  const data = JSON.parse(dataRaw);
+  const gw = currentSelectedGateway;
+  let sender = '', trxId = '';
+
+  if (gw !== 'cod' && gw !== 'uddoktapay') {
+    sender = document.getElementById('paySenderNum').value.trim();
+    trxId = document.getElementById('payTrxId').value.trim();
+    if (!sender || !trxId) {
+      showToast('দয়া করে সেন্ডার নম্বর ও TrxID লিখুন!');
+      return;
+    }
+  }
+
+  let methodTitle = 'ক্যাশ অন ডেলিভারি (COD)';
+  if (gw === 'bkash') methodTitle = 'bKash (বিকাশ)';
+  else if (gw === 'nagad') methodTitle = 'Nagad (নগদ)';
+  else if (gw === 'rocket') methodTitle = 'Rocket (রকেট)';
+  else if (gw === 'pathao') methodTitle = 'Pathao Pay';
+  else if (gw === 'uddoktapay') methodTitle = 'UddoktaPay (অটো গেটওয়ে)';
+
+  let msg = '🛒 *নতুন অর্ডার — Loyalty Access*\n';
+  msg += '🧾 Order ID: *' + data.orderId + '*\n\n';
+  msg += '👤 নাম: ' + data.name + '\n';
+  msg += '📞 ফোন: ' + data.phone + '\n';
+  msg += '📍 ঠিকানা: ' + data.address + '\n';
+  msg += '🚚 ডেলিভারি: ' + data.deliveryArea + '\n\n';
+  msg += '📦 *প্রোডাক্ট তালিকা:*\n';
+  data.items.forEach(i => {
+    msg += '• ' + i.name + ' × ' + i.qty + ' = ৳' + (i.price * i.qty) + '\n';
+  });
+  msg += '\n💰 সাবটোটাল: ৳' + data.subtotal + '\n';
+  msg += '🚚 ডেলিভারি চার্জ: ৳' + data.deliveryFee + '\n';
+  if (data.discount > 0) msg += '🎁 কুপন ছাড়: -৳' + data.discount + '\n';
+  msg += '💵 *সর্বমোট বিল: ৳' + data.total + '*\n\n';
+
+  msg += '💳 *পেমেন্ট ডিটেইলস:*\n';
+  msg += 'পদ্ধতি: ' + methodTitle + '\n';
+  if (sender) msg += 'সেন্ডার নম্বর: ' + sender + '\n';
+  if (trxId) msg += 'Transaction ID: *' + trxId + '*\n';
+
+  // সাকসেস পেজের ডাটা সেভ
+  const completedOrderData = {
+    orderId: data.orderId,
+    total: data.total,
+    waMsg: msg
+  };
+
+  localStorage.setItem('last_completed_order', JSON.stringify(completedOrderData));
+
+  try {
+    const orders = JSON.parse(localStorage.getItem(ORDERS_KEY) || '{}');
+    orders[data.orderId] = { code: 1, date: new Date().toLocaleString() };
+    localStorage.setItem(ORDERS_KEY, JSON.stringify(orders));
+  } catch (err) {}
+
+  localStorage.removeItem(CART_KEY);
+  localStorage.removeItem('pending_order_data');
+
+  // সাকসেস পেজে নিয়ে যাওয়া
+  window.location.href = 'order-success.html';
+};
