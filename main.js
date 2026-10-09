@@ -1,11 +1,90 @@
 /* =========================================================
-   MAIN.JS — পুরো সাইটের JavaScript লজিক
+   LOYALTY ACCESS FASHION — CORE MAIN.JS
+   (Cart, Sound, Animation, Coupon, 2-Step Payment Logic)
    ========================================================= */
 
 const CART_KEY = 'laf_cart_v1';
 const ORDERS_KEY = 'laf_orders_v1';
+let currentSelectedGateway = 'bkash';
+let appliedCoupon = null;
 
-/* ---------------- কার্ট ম্যানেজমেন্ট ---------------- */
+// সচল কুপন কোড ডাটাবেজ
+const VALID_COUPONS = {
+  'LOYALTY500': 500,
+  'GIFT1000': 1000,
+  'VIP2000': 2000,
+  'LAF100': 100
+};
+
+/* ---------------- 1. AUDIO & BUTTON ANIMATION ENGINE ---------------- */
+let globalAudioCtx = null;
+
+function getAudioContext() {
+  if (!globalAudioCtx) {
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    if (AudioCtx) globalAudioCtx = new AudioCtx();
+  }
+  if (globalAudioCtx && globalAudioCtx.state === 'suspended') {
+    globalAudioCtx.resume();
+  }
+  return globalAudioCtx;
+}
+
+function playAudibleClick() {
+  try {
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(850, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(200, ctx.currentTime + 0.06);
+    gain.gain.setValueAtTime(0.2, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.06);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start(ctx.currentTime);
+    osc.stop(ctx.currentTime + 0.06);
+  } catch (e) {}
+}
+
+function playCelebrationSound() {
+  try {
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const notes = [523.25, 659.25, 783.99, 1046.50];
+    notes.forEach((freq, i) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0.15, ctx.currentTime + i * 0.08);
+      gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + i * 0.08 + 0.3);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(ctx.currentTime + i * 0.08);
+      osc.stop(ctx.currentTime + i * 0.08 + 0.3);
+    });
+  } catch(e) {}
+}
+
+// গ্লোবাল বাটন প্রেস লিসেনার
+document.addEventListener('touchstart', function() { getAudioContext(); }, { once: true });
+document.addEventListener('click', function() { getAudioContext(); }, { once: true });
+
+document.addEventListener('pointerdown', function(e) {
+  const btn = e.target.closest('button, .btn, a.btn, .cart-btn, .copy-btn, .filter-btn, .qty-btn, .menu-toggle, .gateway-tab, input[type="submit"]');
+  if (btn) {
+    playAudibleClick();
+    btn.classList.remove('btn-clicked-effect');
+    void btn.offsetWidth;
+    btn.classList.add('btn-clicked-effect');
+    setTimeout(() => { btn.classList.remove('btn-clicked-effect'); }, 280);
+    if (navigator.vibrate) navigator.vibrate(20);
+  }
+});
+
+/* ---------------- 2. CART MANAGEMENT ---------------- */
 function getCart() {
   try { return JSON.parse(localStorage.getItem(CART_KEY)) || []; }
   catch (e) { return []; }
@@ -20,19 +99,10 @@ function addToCart(id, qty) {
   qty = qty || 1;
   const product = PRODUCTS.find(p => p.id === id);
   if (!product) return;
-
   const cart = getCart();
   const existing = cart.find(i => i.id === id);
   if (existing) { existing.qty += qty; }
-  else {
-    cart.push({
-      id: product.id,
-      name: product.name,
-      price: product.price,
-      image: product.image,
-      qty: qty
-    });
-  }
+  else { cart.push({ id: product.id, name: product.name, price: product.price, image: product.image, qty: qty }); }
   saveCart(cart);
   showToast('✅ কার্টে যুক্ত হয়েছে!');
 }
@@ -52,20 +122,15 @@ function setQty(id, qty) {
   if (typeof renderCartPage === 'function') renderCartPage();
 }
 
-function cartCount() {
-  return getCart().reduce((sum, i) => sum + i.qty, 0);
-}
-
-function cartSubtotal() {
-  return getCart().reduce((sum, i) => sum + i.qty * i.price, 0);
-}
+function cartCount() { return getCart().reduce((sum, i) => sum + i.qty, 0); }
+function cartSubtotal() { return getCart().reduce((sum, i) => sum + i.qty * i.price, 0); }
 
 function updateCartBadge() {
   const el = document.getElementById('cartCount');
   if (el) el.textContent = cartCount();
 }
 
-/* ---------------- টোস্ট নোটিফিকেশন ---------------- */
+/* ---------------- 3. TOAST & MOBILE MENU ---------------- */
 let toastTimer = null;
 function showToast(msg) {
   let toast = document.getElementById('globalToast');
@@ -81,164 +146,80 @@ function showToast(msg) {
   toastTimer = setTimeout(() => toast.classList.remove('show'), 2300);
 }
 
-/* ---------------- LUXURY MOBILE MENU JS ---------------- */
 function toggleMenu() {
   const nav = document.getElementById('mainNav');
   const btn = document.querySelector('.menu-toggle');
-  
   if (!nav) return;
-
-  // প্রথমবারের জন্য মেনুটির ডিজাইন অটোমেটিক লাক্সারি কার্ডে কনভার্ট করবে
-  if (!nav.classList.contains('enhanced')) {
-    const originalLinks = Array.from(nav.querySelectorAll('a'));
-    
-    let linksHTML = originalLinks.map(a => {
-      const text = a.textContent.trim();
-      const href = a.getAttribute('href');
-      const isActive = a.classList.contains('active') ? 'active' : '';
-      
-      let icon = '📌';
-      if (text.includes('হোম')) icon = '🏠';
-      else if (text.includes('কালেকশন')) icon = '🛍️';
-      else if (text.includes('গিফট')) icon = '🎁';
-      else if (text.includes('ট্র্যাক')) icon = '🔍';
-      else if (text.includes('যোগাযোগ')) icon = '📞';
-
-      return `<a href="${href}" class="${isActive}">
-                <span>${icon} ${text}</span>
-                <span class="arrow-icon">➔</span>
-              </a>`;
-    }).join('');
-
-    nav.innerHTML = `
-      <div>
-        <div class="menu-header-top">
-          <div>
-            <div class="menu-brand-title">LOYALTY ACCESS</div>
-            <div style="font-size: 0.58rem; color: var(--muted); letter-spacing: 2px;">LUXURY LIFESTYLE STORE</div>
-          </div>
-          <span style="font-size:0.7rem; background:rgba(234,179,8,0.15); color:var(--gold); padding:4px 10px; border-radius:999px; border:1px solid rgba(234,179,8,0.3); font-weight:700;">VIP MENU</span>
-        </div>
-        <div class="mobile-menu-links">
-          ${linksHTML}
-        </div>
-      </div>
-
-      <div class="menu-footer-card">
-        <div style="font-size:0.85rem; font-weight:800; color:#fff; margin-bottom:4px;">সহযোগিতা প্রয়োজন?</div>
-        <p>যেকোনো প্রশ্ন বা অর্ডারে সাহায্য পেতে আমাদের সাথে সরাসরি কথা বলুন।</p>
-        <a href="https://wa.me/8801601866686" target="_blank" class="btn btn-gold btn-sm btn-block" style="padding: 10px; font-size: 0.8rem;">
-          💬 WhatsApp Support
-        </a>
-      </div>
-    `;
-    
-    nav.classList.add('enhanced');
-  }
-
   nav.classList.toggle('open');
   document.body.classList.toggle('menu-open');
-  
   if (btn) {
-    if (nav.classList.contains('open')) {
-      btn.innerHTML = '✕';
-      btn.style.color = '#EAB308';
-      btn.style.borderColor = '#EAB308';
-    } else {
-      btn.innerHTML = '☰';
-      btn.style.color = 'var(--gold)';
-      btn.style.borderColor = 'rgba(234, 179, 8, 0.3)';
-    }
+    if (nav.classList.contains('open')) { btn.innerHTML = '✕'; btn.style.color = '#EAB308'; }
+    else { btn.innerHTML = '☰'; btn.style.color = 'var(--gold)'; }
   }
 }
 
-// মেনু লিংক ক্লিক করলে স্বয়ংক্রিয়ভাবে বন্ধ হবে
-document.addEventListener('click', function(e) {
-  const nav = document.getElementById('mainNav');
-  if (nav && nav.classList.contains('open') && e.target.closest('#mainNav a')) {
-    toggleMenu();
+/* ---------------- 4. COUPON ENGINE ---------------- */
+function triggerConfetti() {
+  let canvas = document.getElementById('canvas-confetti');
+  if(!canvas) {
+    canvas = document.createElement('canvas');
+    canvas.id = 'canvas-confetti';
+    document.body.appendChild(canvas);
   }
-});
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  const particles = [];
+  const colors = ['#EAB308', '#22c55e', '#3b82f6', '#ec4899', '#ffffff'];
 
-/* ---------------- প্রোডাক্ট কার্ড / গ্রিড ---------------- */
-function productCardHTML(p) {
-  const oldPrice = p.oldPrice ? `<span class="price-old">৳ ${p.oldPrice}</span>` : '';
-  const badge = p.badge ? `<span class="product-badge">${p.badge}</span>` : '';
-  const priceHtml = `<span class="price">৳ ${p.price}</span>${oldPrice}`;
+  for(let i = 0; i < 60; i++) {
+    particles.push({
+      x: canvas.width / 2, y: canvas.height / 2,
+      vx: (Math.random() - 0.5) * 14, vy: (Math.random() - 0.5) * 14 - 3,
+      size: Math.random() * 6 + 4, color: colors[Math.floor(Math.random() * colors.length)], life: 100
+    });
+  }
 
-  return `
-    <article class="product-card">
-      <div class="product-thumb">
-        <img src="${p.image}" alt="${p.name}" loading="lazy">
-        ${badge}
-      </div>
-      <div class="product-body">
-        <p class="product-cat">${p.category}</p>
-        <h3 class="product-title">${p.name}</h3>
-        <div class="price-row">${priceHtml}</div>
-        <button class="btn btn-outline btn-block btn-sm" onclick="addToCart(${p.id})">🛒 অর্ডার করুন</button>
-      </div>
-    </article>`;
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    let active = false;
+    particles.forEach(p => {
+      if(p.life > 0) {
+        active = true; p.x += p.vx; p.y += p.vy; p.vy += 0.2; p.life -= 2;
+        ctx.fillStyle = p.color; ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2); ctx.fill();
+      }
+    });
+    if(active) requestAnimationFrame(animate);
+    else ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+  animate();
 }
 
-function renderProductGrid(selector, list) {
-  const el = document.querySelector(selector);
-  if (!el) return;
-  const data = list || PRODUCTS;
-  el.innerHTML = data.map(productCardHTML).join('');
-}
+function applyCouponCode() {
+  const input = document.getElementById('couponInput');
+  const badgeWrap = document.getElementById('couponSuccessMsg');
+  if(!input) return;
+  const code = input.value.trim().toUpperCase();
+  if(!code) { showToast('দয়া করে কুপন কোড লিখুন!'); return; }
 
-/* ---------------- কার্ট পেজ ---------------- */
-function renderCartPage() {
-  const wrap = document.getElementById('cartItems');
-  if (!wrap) return;
-  const cart = getCart();
-
-  if (cart.length === 0) {
-    wrap.innerHTML = `
-      <div class="empty-state">
-        <div class="empty-icon">🛍️</div>
-        <h3>আপনার কার্ট খালি</h3>
-        <p>পছন্দের প্রোডাক্ট যোগ করতে কালেকশন পেজে যান।</p>
-        <a href="shop.html" class="btn btn-gold">কালেকশন দেখুন</a>
-      </div>`;
+  if(VALID_COUPONS[code]) {
+    appliedCoupon = { code: code, discount: VALID_COUPONS[code] };
+    playCelebrationSound();
+    triggerConfetti();
+    if(badgeWrap) badgeWrap.innerHTML = `<div class="applied-success-badge">🎉 '${code}' কুপন যুক্ত হয়েছে (৳${VALID_COUPONS[code]} ছাড়)!</div>`;
+    showToast('🎉 কুপন যুক্ত হয়েছে!');
+    if(typeof updateShipping === 'function') updateShipping();
   } else {
-    wrap.innerHTML = cart.map(item => `
-      <div class="cart-row">
-        <img src="${item.image}" alt="${item.name}">
-        <div class="cart-info">
-          <h4>${item.name}</h4>
-          <p class="price">৳ ${item.price}</p>
-          <div class="qty-box">
-            <button class="qty-btn" onclick="setQty(${item.id}, ${item.qty - 1})">−</button>
-            <span>${item.qty}</span>
-            <button class="qty-btn" onclick="setQty(${item.id}, ${item.qty + 1})">+</button>
-          </div>
-        </div>
-        <div class="cart-right">
-          <button class="remove-btn" onclick="removeFromCart(${item.id})" title="Remove">✕</button>
-          <strong>৳ ${item.price * item.qty}</strong>
-        </div>
-      </div>
-    `).join('');
-  }
-
-  const sub = document.getElementById('cartSubtotal');
-  if (sub) sub.textContent = '৳ ' + cartSubtotal();
-
-  const btn = document.getElementById('checkoutBtn');
-  if (btn) {
-    if (cart.length === 0) btn.setAttribute('disabled', '');
-    else btn.removeAttribute('disabled');
+    showToast('❌ ভুল কুপন কোড!');
+    if(badgeWrap) badgeWrap.innerHTML = '';
   }
 }
 
-/* ---------------- চেকআউট পেজ ---------------- */
+/* ---------------- 5. CHECKOUT PAGE (STEP 1) ---------------- */
 function renderCheckoutPage() {
   const wrap = document.getElementById('checkoutItems');
   if (!wrap) return;
   const cart = getCart();
-
   if (cart.length === 0) { window.location.href = 'cart.html'; return; }
 
   wrap.innerHTML = cart.map(i => `
@@ -250,7 +231,6 @@ function renderCheckoutPage() {
 
   const sub = document.getElementById('coSubtotal');
   if (sub) sub.textContent = '৳ ' + cartSubtotal();
-
   updateShipping();
 }
 
@@ -258,387 +238,20 @@ function updateShipping() {
   const sel = document.getElementById('deliveryArea');
   if (!sel) return;
   const fee = sel.value === 'inside' ? DELIVERY.inside : DELIVERY.outside;
-  const s = document.getElementById('coShipping');
-  const t = document.getElementById('coTotal');
-  if (s) s.textContent = '৳ ' + fee;
-  if (t) t.textContent = '৳ ' + (cartSubtotal() + fee);
-}
-
-/* ---------------- অর্ডার সাবমিট (WhatsApp-এ যাবে) ---------------- */
-function processOrder(e) {
-  e.preventDefault();
-  const cart = getCart();
-  if (cart.length === 0) { showToast('আপনার কার্ট খালি!'); return; }
-
-  const name = document.getElementById('custName').value.trim();
-  const phone = document.getElementById('custPhone').value.trim();
-  const address = document.getElementById('custAddress').value.trim();
-  const area = document.getElementById('deliveryArea').value;
-  const fee = area === 'inside' ? DELIVERY.inside : DELIVERY.outside;
   const subtotal = cartSubtotal();
-  const total = subtotal + fee;
-
-  const orderId = 'LA-' + Math.floor(10000 + Math.random() * 90000);
-
-  let msg = '🛒 *নতুন অর্ডার — Loyalty Access*\n';
-  msg += '🧾 Order ID: *' + orderId + '*\n\n';
-  msg += '👤 নাম: ' + name + '\n';
-  msg += '📞 ফোন: ' + phone + '\n';
-  msg += '📍 ঠিকানা: ' + address + '\n';
-  msg += '🚚 ডেলিভারি: ' + (area === 'inside' ? 'ঢাকার ভিতরে' : 'ঢাকার বাইরে') + '\n\n';
-  msg += '📦 *প্রোডাক্ট তালিকা:*\n';
-  cart.forEach(i => {
-    msg += '• ' + i.name + ' × ' + i.qty + ' = ৳' + (i.price * i.qty) + '\n';
-  });
-  msg += '\n💰 সাবটোটাল: ৳' + subtotal + '\n';
-  msg += '🚚 ডেলিভারি চার্জ: ৳' + fee + '\n';
-  msg += '💵 *সর্বমোট: ৳' + total + '*\n';
-  msg += '\nপেমেন্ট: ক্যাশ অন ডেলিভারি';
-
-  /* ট্র্যাকিংয়ের জন্য এই ব্রাউজারে সেভ */
-  try {
-    const orders = JSON.parse(localStorage.getItem(ORDERS_KEY) || '{}');
-    orders[orderId] = { code: 1, date: new Date().toLocaleString() };
-    localStorage.setItem(ORDERS_KEY, JSON.stringify(orders));
-  } catch (err) {}
-
-  window.open('https://wa.me/' + WHATSAPP_NUMBER + '?text=' + encodeURIComponent(msg), '_blank');
-
-  localStorage.removeItem(CART_KEY);
-  showToast('✅ WhatsApp-এ অর্ডার পাঠানো হয়েছে!');
-
-  setTimeout(() => { window.location.href = 'track-order.html?order=' + orderId; }, 1600);
-}
-
-/* ---------------- অর্ডার ট্র্যাকিং ---------------- */
-const TRACK_STEPS = [
-  { code: 1, label: 'অর্ডার গৃহীত', icon: '🟡', percent: 15 },
-  { code: 2, label: 'প্যাকিং সম্পন্ন', icon: '📦', percent: 40 },
-  { code: 3, label: 'কুরিয়ারে পাঠানো', icon: '🚚', percent: 75 },
-  { code: 4, label: 'ডেলিভারি Completed', icon: '✅', percent: 100 }
-];
-
-function trackOrder() {
-  const input = document.getElementById('trackInput');
-  const found = document.getElementById('trackResult');
-  const notFound = document.getElementById('trackNotFound');
-  if (!input || !found) return;
-
-  const id = (input.value || '').trim().toUpperCase();
-  found.style.display = 'none';
-  if (notFound) notFound.style.display = 'none';
-  if (!id) { showToast('অর্ডার আইডি লিখুন'); return; }
-
-  let code = (typeof ORDER_STATUS !== 'undefined') ? ORDER_STATUS[id] : null;
-
-  if (!code) {
-    try {
-      const local = JSON.parse(localStorage.getItem(ORDERS_KEY) || '{}');
-      if (local[id]) code = local[id].code || 1;
-    } catch (e) {}
-  }
-
-  if (!code) {
-    if (notFound) notFound.style.display = 'block';
-    return;
-  }
-
-  const step = TRACK_STEPS.find(s => s.code === code) || TRACK_STEPS[0];
-
-  document.getElementById('trackOrderId').textContent = id;
-  document.getElementById('trackStatusText').textContent = step.icon + ' ' + step.label;
-  document.getElementById('trackFill').style.width = step.percent + '%';
-
-  const stepsWrap = document.getElementById('trackSteps');
-  if (stepsWrap) {
-    stepsWrap.innerHTML = TRACK_STEPS.map(s => {
-      const done = s.code <= code ? ' done' : '';
-      return '<div class="track-step' + done + '"><span>' + s.icon + '</span><p>' + s.label + '</p></div>';
-    }).join('');
-  }
-
-  found.style.display = 'block';
-}
-
-/* ---------------- হেডার ব্যাজ সব পেজে আপডেট ---------------- */
-updateCartBadge();
-/* =========================================================
-   GIFT CARD & COUPON SYSTEM LOGIC WITH SOUND & ANIMATION
-   ========================================================= */
-
-// সচল কুপন কোড লিস্ট (আপনি চাইলে পরে আরো যোগ করতে পারেন)
-const VALID_COUPONS = {
-  'LOYALTY500': 500,  // ৫০০ টাকা ছাড়
-  'GIFT1000': 1000,   // ১০০০ টাকা ছাড়
-  'VIP2000': 2000,    // ২০০০ টাকা ছাড়
-  'LAF100': 100       // ১০০ টাকা ছাড়
-};
-
-let appliedCoupon = null;
-
-// সাউন্ড ইফেক্ট প্রসেসর (কোনো অডিও ফাইলের ল্যাগ ছাড়া কাজ করবে)
-function playCelebrationSound() {
-  try {
-    const ctx = new (window.AudioContext || window.webkitAudioContext)();
-    const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6 (Happy Chord)
-    notes.forEach((freq, i) => {
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.type = 'triangle';
-      osc.frequency.value = freq;
-      gain.gain.setValueAtTime(0.12, ctx.currentTime + i * 0.08);
-      gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + i * 0.08 + 0.35);
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.start(ctx.currentTime + i * 0.08);
-      osc.stop(ctx.currentTime + i * 0.08 + 0.35);
-    });
-  } catch(e) {}
-}
-
-// স্ক্রিনে রঙ্গিন আতশবাজি/কনফেটি ফোটানোর অ্যানিমেশন
-function triggerConfetti() {
-  let canvas = document.getElementById('canvas-confetti');
-  if(!canvas) {
-    canvas = document.createElement('canvas');
-    canvas.id = 'canvas-confetti';
-    document.body.appendChild(canvas);
-  }
-  const ctx = canvas.getContext('2d');
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-
-  const particles = [];
-  const colors = ['#EAB308', '#22c55e', '#3b82f6', '#ec4899', '#ffffff'];
-
-  for(let i = 0; i < 70; i++) {
-    particles.push({
-      x: canvas.width / 2,
-      y: canvas.height / 2,
-      vx: (Math.random() - 0.5) * 14,
-      vy: (Math.random() - 0.5) * 14 - 3,
-      size: Math.random() * 7 + 4,
-      color: colors[Math.floor(Math.random() * colors.length)],
-      life: 100
-    });
-  }
-
-  function animate() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    let active = false;
-    particles.forEach(p => {
-      if(p.life > 0) {
-        active = true;
-        p.x += p.vx;
-        p.y += p.vy;
-        p.vy += 0.2; // Gravity
-        p.life -= 2;
-        ctx.fillStyle = p.color;
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        ctx.fill();
-      }
-    });
-    if(active) requestAnimationFrame(animate);
-    else ctx.clearRect(0, 0, canvas.width, canvas.height);
-  }
-  animate();
-}
-
-// কুপন অ্যাপ্লাই করার ফাংশন
-function applyCouponCode() {
-  const input = document.getElementById('couponInput');
-  const badgeWrap = document.getElementById('couponSuccessMsg');
-  if(!input) return;
-
-  const code = input.value.trim().toUpperCase();
-  if(!code) { showToast('দয়া করে কুপন কোড লিখুন!'); return; }
-
-  if(VALID_COUPONS[code]) {
-    appliedCoupon = { code: code, discount: VALID_COUPONS[code] };
-    
-    // সাউন্ড ও অ্যানিমেশন রান করা
-    playCelebrationSound();
-    triggerConfetti();
-
-    if(badgeWrap) {
-      badgeWrap.innerHTML = `<div class="applied-success-badge">🎉 '${code}' কুপন সফলভাবে যুক্ত হয়েছে (৳${VALID_COUPONS[code]} ছাড়)!</div>`;
-    }
-
-    showToast('🎉 কুপন সফলভাবে যুক্ত হয়েছে!');
-    updateShipping(); // বিল আপডেট করা
-  } else {
-    showToast('❌ দুঃখিত! ভুল বা মেয়াদোত্তীর্ণ কুপন কোড।');
-    if(badgeWrap) badgeWrap.innerHTML = '';
-  }
-}
-
-// চেকআউটের মোট বিলে কুপন বিয়োগ করা (Overriding existing updateShipping)
-const originalUpdateShipping = updateShipping;
-updateShipping = function() {
-  const sel = document.getElementById('deliveryArea');
-  if (!sel) return;
-  const fee = sel.value === 'inside' ? DELIVERY.inside : DELIVERY.outside;
-  const subtotal = cartSubtotal();
-  
-  let discount = appliedCoupon ? appliedCoupon.discount : 0;
+  const discount = appliedCoupon ? appliedCoupon.discount : 0;
   let total = (subtotal + fee) - discount;
-  if(total < 0) total = 0; // Negative বিল যেন না হয়
+  if(total < 0) total = 0;
 
   const s = document.getElementById('coShipping');
   const t = document.getElementById('coTotal');
   if (s) s.textContent = '৳ ' + fee;
-  if (t) t.textContent = '৳ ' + total + (discount > 0 ? ` (৳${discount} ছাড়)` : '');
-};
-
-/* ----------------১-ক্লিকে নম্বর কপি করার ফাংশন ---------------- */
-function copyText(text, successMsg) {
-  navigator.clipboard.writeText(text).then(() => {
-    showToast('📋 ' + (successMsg || 'কপি হয়েছে!'));
-  }).catch(() => {
-    showToast('কপি করা যায়নি, ম্যানুয়ালি লিখুন');
-  });
+  if (t) t.textContent = '৳ ' + total + (discount > 0 ? ` (৳${discount} ছাড়)` : '');
 }
 
-/* ---------------- ম্যানুয়াল পেমেন্ট WhatsApp কনফার্মেশন ---------------- */
-function submitManualPayment(e) {
-  e.preventDefault();
-  
-  const orderId = document.getElementById('payOrderId').value.trim();
-  const method = document.getElementById('payMethod').value;
-  const sender = document.getElementById('senderNum').value.trim();
-  const trxId = document.getElementById('trxId').value.trim();
-  const amount = document.getElementById('payAmount').value.trim();
-
-  let msg = '💳 *ম্যানুয়াল পেমেন্ট ভেরিফিকেশন — Loyalty Access*\n\n';
-  msg += '🧾 Order ID: *' + orderId + '*\n';
-  msg += '📲 পেমেন্ট মাধ্যম: ' + method + '\n';
-  msg += '📞 সেন্ডার নম্বর: ' + sender + '\n';
-  msg += '🔢 Transaction ID (TrxID): *' + trxId + '*\n';
-  msg += '💰 পেমেন্ট পরিমাণ: ৳' + amount + '\n\n';
-  msg += 'অনুগ্রহ করে আমার পেমেন্ট ভেরিফাই করে অর্ডারটি কনফার্ম করুন।';
-
-  window.open('https://wa.me/' + WHATSAPP_NUMBER + '?text=' + encodeURIComponent(msg), '_blank');
-  showToast('✅ পেমেন্ট তথ্য পাঠানো হচ্ছে...');
-}
-
-/* ---------------- Checkout Process Update (অনলাইন পেমেন্ট রিডাইরেক্ট) ---------------- */
-const oldProcessOrder = processOrder;
-processOrder = function(e) {
-  e.preventDefault();
-  const payTypeEl = document.querySelector('input[name="paymentType"]:checked');
-  const isOnline = payTypeEl && payTypeEl.value === 'online';
-
-  if (isOnline) {
-    const cart = getCart();
-    if (cart.length === 0) { showToast('আপনার কার্ট খালি!'); return; }
-
-    const name = document.getElementById('custName').value.trim();
-    const phone = document.getElementById('custPhone').value.trim();
-    const address = document.getElementById('custAddress').value.trim();
-    const area = document.getElementById('deliveryArea').value;
-    const fee = area === 'inside' ? DELIVERY.inside : DELIVERY.outside;
-    const subtotal = cartSubtotal();
-    const discount = typeof appliedCoupon !== 'undefined' && appliedCoupon ? appliedCoupon.discount : 0;
-    const total = (subtotal + fee) - discount;
-
-    const orderId = 'LA-' + Math.floor(10000 + Math.random() * 90000);
-
-    let msg = '🛒 *নতুন অনলাইন পেমেন্ট অর্ডার — Loyalty Access*\n';
-    msg += '🧾 Order ID: *' + orderId + '*\n\n';
-    msg += '👤 নাম: ' + name + '\n📞 ফোন: ' + phone + '\n📍 ঠিকানা: ' + address + '\n';
-    msg += '💵 *সর্বমোট বিল: ৳' + total + '* (অনলাইন পেমেন্ট পেন্ডিং)\n';
-
-    window.open('https://wa.me/' + WHATSAPP_NUMBER + '?text=' + encodeURIComponent(msg), '_blank');
-
-    localStorage.removeItem(CART_KEY);
-    showToast('অর্ডার তথ্য পাঠানো হয়েছে! পেমেন্ট পেজে নিয়ে যাওয়া হচ্ছে...');
-
-    setTimeout(() => {
-      window.location.href = `payment.html?order=${orderId}&total=${total}`;
-    }, 2000);
-
-  } else {
-    oldProcessOrder(e);
-  }
-};
-
-/* =========================================================
-   100% WORKING SOUND & ANIMATION ENGINE
-   ========================================================= */
-
-let globalAudioCtx = null;
-
-// ১. অডিও ইঞ্জিন আনলক করার ফাংশন
-function getAudioContext() {
-  if (!globalAudioCtx) {
-    const AudioCtx = window.AudioContext || window.webkitAudioContext;
-    if (AudioCtx) globalAudioCtx = new AudioCtx();
-  }
-  if (globalAudioCtx && globalAudioCtx.state === 'suspended') {
-    globalAudioCtx.resume();
-  }
-  return globalAudioCtx;
-}
-
-// ২. মিষ্টি পপ/ক্লিক সাউন্ড বাজানোর ফাংশন
-function playAudibleClick() {
-  try {
-    const ctx = getAudioContext();
-    if (!ctx) return;
-
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-
-    osc.type = 'sine';
-    // ৯০০Hz থেকে শুরু হয়ে ১৫০Hz-এ নেমে পপ সাউন্ড তৈরি করবে
-    osc.frequency.setValueAtTime(900, ctx.currentTime);
-    osc.frequency.exponentialRampToValueAtTime(150, ctx.currentTime + 0.08);
-
-    // সাউন্ডের ভলিউম
-    gain.gain.setValueAtTime(0.3, ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.08);
-
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-
-    osc.start(ctx.currentTime);
-    osc.stop(ctx.currentTime + 0.08);
-  } catch (e) {}
-}
-
-// ৩. স্ক্রিনের যেকোনো জায়গায় প্রথম টাচেই সাউন্ড আনলক হবে
-document.addEventListener('touchstart', function() { getAudioContext(); }, { once: true });
-document.addEventListener('click', function() { getAudioContext(); }, { once: true });
-
-// ৪. যেকোনো বাটনে চাপ দিলেই অ্যানিমেশন ও সাউন্ড চলবে
-document.addEventListener('pointerdown', function(e) {
-  const btn = e.target.closest('button, .btn, a.btn, .cart-btn, .copy-btn, .filter-btn, .qty-btn, .menu-toggle, input[type="submit"]');
-  
-  if (btn) {
-    // সাউন্ড প্লে
-    playAudibleClick();
-
-    // অ্যানিমেশন রান করা
-    btn.classList.remove('btn-clicked-effect');
-    void btn.offsetWidth; // অ্যানিমেশন রিসেট
-    btn.classList.add('btn-clicked-effect');
-
-    setTimeout(() => {
-      btn.classList.remove('btn-clicked-effect');
-    }, 280);
-  }
-});
-
-/* =========================================================
-   NEW SEAMLESS TWO-STEP CHECKOUT & PAYMENT LOGIC
-   ========================================================= */
-
-let currentSelectedGateway = 'bkash';
-
-// ১. চেকআউট পেজ থেকে পেমেন্ট পেজে রিডাইরেক্ট (হোয়াটসঅ্যাপ ছাড়া!)
+// পেমেন্ট পেজে রিডাইরেক্ট ফাংশন (ধাপ ১)
 function goToPaymentStep(e) {
-  e.preventDefault();
+  if (e) e.preventDefault();
   const cart = getCart();
   if (cart.length === 0) { showToast('আপনার কার্ট খালি!'); return; }
 
@@ -648,34 +261,26 @@ function goToPaymentStep(e) {
   const area = document.getElementById('deliveryArea').value;
   const fee = area === 'inside' ? DELIVERY.inside : DELIVERY.outside;
   const subtotal = cartSubtotal();
-  const discount = typeof appliedCoupon !== 'undefined' && appliedCoupon ? appliedCoupon.discount : 0;
+  const discount = appliedCoupon ? appliedCoupon.discount : 0;
   const total = (subtotal + fee) - discount;
 
   const orderId = 'LA-' + Math.floor(10000 + Math.random() * 90000);
 
-  // ব্রাউজারে অর্ডারের অস্থায়ী ডাটা সেভ রাখা
-  const checkoutData = {
-    orderId: orderId,
-    name: name,
-    phone: phone,
-    address: address,
+  const pendingData = {
+    orderId: orderId, name: name, phone: phone, address: address,
     deliveryArea: area === 'inside' ? 'ঢাকার ভিতরে' : 'ঢাকার বাইরে',
-    deliveryFee: fee,
-    subtotal: subtotal,
-    discount: discount,
-    total: total,
-    items: cart
+    deliveryFee: fee, subtotal: subtotal, discount: discount, total: total, items: cart
   };
 
-  localStorage.setItem('pending_order_data', JSON.stringify(checkoutData));
+  localStorage.setItem('pending_order_data', JSON.stringify(pendingData));
   showToast('পেমেন্ট পেজে নিয়ে যাওয়া হচ্ছে...');
 
   setTimeout(() => {
     window.location.href = 'payment.html';
-  }, 600);
+  }, 400);
 }
 
-// ২. পেমেন্ট পেজ ইনিশিয়ালাইজেশান
+/* ---------------- 6. MULTI-GATEWAY PAYMENT (STEP 2) ---------------- */
 function initPaymentPage() {
   const dataRaw = localStorage.getItem('pending_order_data');
   if (!dataRaw) { window.location.href = 'cart.html'; return; }
@@ -685,24 +290,40 @@ function initPaymentPage() {
   const totEl = document.getElementById('payBarTotal');
   if (idEl) idEl.textContent = data.orderId;
   if (totEl) totEl.textContent = '৳ ' + data.total;
+  
+  // ডিফল্ট বিকাশ প্যানেল সেট
+  selectGateway('bkash', document.querySelector('.gateway-tab'));
 }
 
-// ৩. পেমেন্ট গেটওয়ে ট্যাব সিলেক্ট করা
-function selectGateway(gw) {
+function selectGateway(gw, element) {
   currentSelectedGateway = gw;
 
-  // সব ট্যাব থেকে active সরানো
+  // সব ট্যাব থেকে active দূর করা
   document.querySelectorAll('.gateway-tab').forEach(t => t.classList.remove('active'));
-  event.currentTarget.classList.add('active');
+  
+  // ক্লিক করা ট্যাবে active যুক্ত করা
+  if(element) {
+    element.classList.add('active');
+  } else {
+    const tabs = document.querySelectorAll('.gateway-tab');
+    if(gw === 'bkash' && tabs[0]) tabs[0].classList.add('active');
+    else if(gw === 'nagad' && tabs[1]) tabs[1].classList.add('active');
+    else if(gw === 'rocket' && tabs[2]) tabs[2].classList.add('active');
+    else if(gw === 'pathao' && tabs[3]) tabs[3].classList.add('active');
+    else if(gw === 'uddoktapay' && tabs[4]) tabs[4].classList.add('active');
+    else if(gw === 'cod' && tabs[5]) tabs[5].classList.add('active');
+  }
 
-  // সব প্যানেল হাইড করা
+  // সব প্যানেল বন্ধ করা
   document.querySelectorAll('.gateway-panel').forEach(p => p.style.display = 'none');
 
-  // নির্বাচিত প্যানেল দেখানো
-  const panel = document.getElementById('panel-' + gw);
-  if (panel) panel.style.display = 'block';
+  // নির্দিষ্ট প্যানেল চালু করা
+  const targetPanel = document.getElementById('panel-' + gw);
+  if (targetPanel) {
+    targetPanel.style.display = 'block';
+  }
 
-  // ক্যাশ অন ডেলিভারি বা উদ্যোক্তাপে হলে TrxID ইনপুট বক্স হাইড হবে
+  // TrxID ফিল্ড নিয়ন্ত্রণ
   const trxFields = document.getElementById('trxFields');
   if (trxFields) {
     if (gw === 'cod' || gw === 'uddoktapay') {
@@ -713,21 +334,24 @@ function selectGateway(gw) {
   }
 }
 
-// ৪. ফাইনাল অর্ডার কনফার্মেশন (একক হোয়াটসঅ্যাপ মেসেজ)
+function copyText(text, successMsg) {
+  navigator.clipboard.writeText(text).then(() => {
+    showToast('📋 ' + (successMsg || 'কপি হয়েছে!'));
+  }).catch(() => { showToast('কপি করা যায়নি'); });
+}
+
 function completeOrderFinal(e) {
-  e.preventDefault();
+  if (e) e.preventDefault();
   const dataRaw = localStorage.getItem('pending_order_data');
   if (!dataRaw) return;
 
   const data = JSON.parse(dataRaw);
   const gw = currentSelectedGateway;
-
   let sender = '', trxId = '';
 
   if (gw !== 'cod' && gw !== 'uddoktapay') {
     sender = document.getElementById('paySenderNum').value.trim();
     trxId = document.getElementById('payTrxId').value.trim();
-
     if (!sender || !trxId) {
       showToast('দয়া করে সেন্ডার নম্বর ও TrxID লিখুন!');
       return;
@@ -756,24 +380,23 @@ function completeOrderFinal(e) {
   if (data.discount > 0) msg += '🎁 কুপন ছাড়: -৳' + data.discount + '\n';
   msg += '💵 *সর্বমোট বিল: ৳' + data.total + '*\n\n';
 
-  msg += '💳 *পেমেন্ট স্ট্যাটাস:*\n';
+  msg += '💳 *পেমেন্ট ডিটেইলস:*\n';
   msg += 'পদ্ধতি: ' + methodTitle + '\n';
   if (sender) msg += 'সেন্ডার নম্বর: ' + sender + '\n';
   if (trxId) msg += 'Transaction ID: *' + trxId + '*\n';
 
-  // লোকাল ট্র্যাকিং সেভ
   try {
     const orders = JSON.parse(localStorage.getItem(ORDERS_KEY) || '{}');
     orders[data.orderId] = { code: 1, date: new Date().toLocaleString() };
     localStorage.setItem(ORDERS_KEY, JSON.stringify(orders));
   } catch (err) {}
 
-  // হোয়াটসঅ্যাপে একক মেসেজ পাঠানো
   window.open('https://wa.me/' + WHATSAPP_NUMBER + '?text=' + encodeURIComponent(msg), '_blank');
-
   localStorage.removeItem(CART_KEY);
   localStorage.removeItem('pending_order_data');
 
-  showToast('✅ অর্ডার সফলভাবে কনফার্ম হয়েছে!');
-  setTimeout(() => { window.location.href = 'track-order.html?order=' + data.orderId; }, 1800);
+  showToast('✅ অর্ডার কনফার্ম হয়েছে!');
+  setTimeout(() => { window.location.href = 'track-order.html?order=' + data.orderId; }, 1500);
 }
+
+updateCartBadge();
