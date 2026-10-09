@@ -270,3 +270,96 @@ input, select, textarea { font-family: inherit; }
   .main-nav.open { display: flex !important; }
   .main-nav a { padding: 12px 0; font-size: 1rem; border-bottom: 1px solid var(--border); }
 }
+
+/* ==========================================================
+   ALIGNMENT & CENTERING FIX (WHY US, STEPS, CTA BANNER)
+   ========================================================== */
+
+/* ১. সব হেডিং ও সাবটাইটেল স্ক্রিনের মাঝখানে (Center) আনা */
+.section-title, .section-subtitle {
+  text-align: center !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  display: block !important;
+}
+
+/* ২. "কেন আমরা?" সেকশনের আইকন ও কার্ড সেন্টারিং */
+.why-grid {
+  justify-content: center !important;
+}
+
+.why-card {
+  text-align: center !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 24px 16px !important;
+}
+
+.why-icon {
+  margin: 0 auto 10px auto !important;
+  display: block !important;
+  text-align: center !important;
+}
+
+.why-card h3, .why-card p {
+  text-align: center !important;
+}
+
+/* ৩. "কীভাবে অর্ডার করবেন?" সেকশন সেন্টার ও কার্ড ফিক্স */
+.steps-box {
+  text-align: center !important;
+  max-width: 900px !important;
+  margin: 0 auto !important;
+}
+
+.steps-grid {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 16px !important;
+  margin-top: 24px !important;
+}
+
+.step-card {
+  background: var(--bg) !important;
+  border: 1px solid var(--border) !important;
+  padding: 16px !important;
+  border-radius: 12px !important;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 12px !important;
+  text-align: left !important;
+}
+
+.step-num {
+  flex-shrink: 0 !important;
+}
+
+/* ৪. "নতুন অফার ও ডিসকাউন্ট পেতে চান?" CTA ব্যানার সেন্টারিং */
+.cta-banner {
+  text-align: center !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 36px 20px !important;
+  margin: 0 auto !important;
+}
+
+.cta-banner h2, .cta-banner p {
+  text-align: center !important;
+}
+
+.cta-banner .btn {
+  margin: 10px auto 0 auto !important;
+}
+
+/* মোবাইল রেসপন্সিভ ফিক্স */
+@media (max-width: 760px) {
+  .steps-grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+}
