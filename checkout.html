@@ -38,9 +38,9 @@
     </div>
 
     <div class="cart-layout">
-      <!-- ফর্ম (এখানে কোনো হোয়াটসঅ্যাপ রিডাইরেক্ট হবে না) -->
+      <!-- ফর্ম -->
       <form id="checkout-form" onsubmit="goToPaymentStep(event)" class="summary-box" style="position:static;">
-        <h3>👤 কাস্টমার ইনফরমেশন</h3>
+        <h3>👤 কাস্টমার তথ্য</h3>
 
         <div class="form-group">
           <label>আপনার নাম *</label>
@@ -70,22 +70,23 @@
         </button>
       </form>
 
-      <!-- ANIMATED COUPON BOX -->
-<div class="coupon-animated-box">
-  <label style="font-size:0.78rem; color:var(--gold); font-weight:700; display:block; margin-bottom:6px;">
-    🎁 কুপন / গিফট কার্ড ব্যবহার করুন:
-  </label>
-  <div class="coupon-input-group">
-    <input type="text" id="couponInput" placeholder="যেমন: LOYALTY500">
-    <button type="button" class="coupon-btn" onclick="applyCouponCode()">Apply</button>
-  </div>
-  <div id="couponSuccessMsg"></div>
-</div>
-      
-      <!-- সামারি -->
+      <!-- সামারি ও কুপন বক্স -->
       <aside class="summary-box">
         <h3>📦 আপনার অর্ডার</h3>
         <div id="checkoutItems"></div>
+
+        <!-- কুপন বক্স -->
+        <div class="coupon-animated-box">
+          <label style="font-size:0.78rem; color:var(--gold); font-weight:700; display:block; margin-bottom:6px;">
+            🎁 কুপন / গিফট কার্ড ব্যবহার করুন:
+          </label>
+          <div class="coupon-input-group">
+            <input type="text" id="couponInput" placeholder="যেমন: LOYALTY500">
+            <button type="button" class="coupon-btn" onclick="applyCouponCode()">Apply</button>
+          </div>
+          <div id="couponSuccessMsg"></div>
+        </div>
+
         <div class="summary-row" style="border-top:1px solid var(--border); margin-top:10px;"><span>সাবটোটাল</span><span id="coSubtotal">৳ 0</span></div>
         <div class="summary-row"><span>ডেলিভারি চার্জ</span><span id="coShipping">৳ 60</span></div>
         <div class="summary-row total"><span>সর্বমোট</span><span id="coTotal">৳ 0</span></div>
@@ -104,7 +105,6 @@
         <h4>গুরুত্বপূর্ণ লিংক</h4>
         <ul>
           <li><a href="about.html">About Us</a></li>
-          <li><a href="payment.html">পেমেন্ট পেজ</a></li>
           <li><a href="gift-card.html">Gift Cards</a></li>
           <li><a href="contact.html">Contact Us</a></li>
         </ul>
