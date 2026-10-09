@@ -629,3 +629,151 @@ document.addEventListener('pointerdown', function(e) {
     }, 280);
   }
 });
+
+/* =========================================================
+   NEW SEAMLESS TWO-STEP CHECKOUT & PAYMENT LOGIC
+   ========================================================= */
+
+let currentSelectedGateway = 'bkash';
+
+// ১. চেকআউট পেজ থেকে পেমেন্ট পেজে রিডাইরেক্ট (হোয়াটসঅ্যাপ ছাড়া!)
+function goToPaymentStep(e) {
+  e.preventDefault();
+  const cart = getCart();
+  if (cart.length === 0) { showToast('আপনার কার্ট খালি!'); return; }
+
+  const name = document.getElementById('custName').value.trim();
+  const phone = document.getElementById('custPhone').value.trim();
+  const address = document.getElementById('custAddress').value.trim();
+  const area = document.getElementById('deliveryArea').value;
+  const fee = area === 'inside' ? DELIVERY.inside : DELIVERY.outside;
+  const subtotal = cartSubtotal();
+  const discount = typeof appliedCoupon !== 'undefined' && appliedCoupon ? appliedCoupon.discount : 0;
+  const total = (subtotal + fee) - discount;
+
+  const orderId = 'LA-' + Math.floor(10000 + Math.random() * 90000);
+
+  // ব্রাউজারে অর্ডারের অস্থায়ী ডাটা সেভ রাখা
+  const checkoutData = {
+    orderId: orderId,
+    name: name,
+    phone: phone,
+    address: address,
+    deliveryArea: area === 'inside' ? 'ঢাকার ভিতরে' : 'ঢাকার বাইরে',
+    deliveryFee: fee,
+    subtotal: subtotal,
+    discount: discount,
+    total: total,
+    items: cart
+  };
+
+  localStorage.setItem('pending_order_data', JSON.stringify(checkoutData));
+  showToast('পেমেন্ট পেজে নিয়ে যাওয়া হচ্ছে...');
+
+  setTimeout(() => {
+    window.location.href = 'payment.html';
+  }, 600);
+}
+
+// ২. পেমেন্ট পেজ ইনিশিয়ালাইজেশান
+function initPaymentPage() {
+  const dataRaw = localStorage.getItem('pending_order_data');
+  if (!dataRaw) { window.location.href = 'cart.html'; return; }
+
+  const data = JSON.parse(dataRaw);
+  const idEl = document.getElementById('payBarOrderId');
+  const totEl = document.getElementById('payBarTotal');
+  if (idEl) idEl.textContent = data.orderId;
+  if (totEl) totEl.textContent = '৳ ' + data.total;
+}
+
+// ৩. পেমেন্ট গেটওয়ে ট্যাব সিলেক্ট করা
+function selectGateway(gw) {
+  currentSelectedGateway = gw;
+
+  // সব ট্যাব থেকে active সরানো
+  document.querySelectorAll('.gateway-tab').forEach(t => t.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+
+  // সব প্যানেল হাইড করা
+  document.querySelectorAll('.gateway-panel').forEach(p => p.style.display = 'none');
+
+  // নির্বাচিত প্যানেল দেখানো
+  const panel = document.getElementById('panel-' + gw);
+  if (panel) panel.style.display = 'block';
+
+  // ক্যাশ অন ডেলিভারি বা উদ্যোক্তাপে হলে TrxID ইনপুট বক্স হাইড হবে
+  const trxFields = document.getElementById('trxFields');
+  if (trxFields) {
+    if (gw === 'cod' || gw === 'uddoktapay') {
+      trxFields.style.display = 'none';
+    } else {
+      trxFields.style.display = 'block';
+    }
+  }
+}
+
+// ৪. ফাইনাল অর্ডার কনফার্মেশন (একক হোয়াটসঅ্যাপ মেসেজ)
+function completeOrderFinal(e) {
+  e.preventDefault();
+  const dataRaw = localStorage.getItem('pending_order_data');
+  if (!dataRaw) return;
+
+  const data = JSON.parse(dataRaw);
+  const gw = currentSelectedGateway;
+
+  let sender = '', trxId = '';
+
+  if (gw !== 'cod' && gw !== 'uddoktapay') {
+    sender = document.getElementById('paySenderNum').value.trim();
+    trxId = document.getElementById('payTrxId').value.trim();
+
+    if (!sender || !trxId) {
+      showToast('দয়া করে সেন্ডার নম্বর ও TrxID লিখুন!');
+      return;
+    }
+  }
+
+  let methodTitle = 'ক্যাশ অন ডেলিভারি (COD)';
+  if (gw === 'bkash') methodTitle = 'bKash (বিকাশ)';
+  else if (gw === 'nagad') methodTitle = 'Nagad (নগদ)';
+  else if (gw === 'rocket') methodTitle = 'Rocket (রকেট)';
+  else if (gw === 'pathao') methodTitle = 'Pathao Pay';
+  else if (gw === 'uddoktapay') methodTitle = 'UddoktaPay (অটো গেটওয়ে)';
+
+  let msg = '🛒 *নতুন অর্ডার — Loyalty Access*\n';
+  msg += '🧾 Order ID: *' + data.orderId + '*\n\n';
+  msg += '👤 নাম: ' + data.name + '\n';
+  msg += '📞 ফোন: ' + data.phone + '\n';
+  msg += '📍 ঠিকানা: ' + data.address + '\n';
+  msg += '🚚 ডেলিভারি: ' + data.deliveryArea + '\n\n';
+  msg += '📦 *প্রোডাক্ট তালিকা:*\n';
+  data.items.forEach(i => {
+    msg += '• ' + i.name + ' × ' + i.qty + ' = ৳' + (i.price * i.qty) + '\n';
+  });
+  msg += '\n💰 সাবটোটাল: ৳' + data.subtotal + '\n';
+  msg += '🚚 ডেলিভারি চার্জ: ৳' + data.deliveryFee + '\n';
+  if (data.discount > 0) msg += '🎁 কুপন ছাড়: -৳' + data.discount + '\n';
+  msg += '💵 *সর্বমোট বিল: ৳' + data.total + '*\n\n';
+
+  msg += '💳 *পেমেন্ট স্ট্যাটাস:*\n';
+  msg += 'পদ্ধতি: ' + methodTitle + '\n';
+  if (sender) msg += 'সেন্ডার নম্বর: ' + sender + '\n';
+  if (trxId) msg += 'Transaction ID: *' + trxId + '*\n';
+
+  // লোকাল ট্র্যাকিং সেভ
+  try {
+    const orders = JSON.parse(localStorage.getItem(ORDERS_KEY) || '{}');
+    orders[data.orderId] = { code: 1, date: new Date().toLocaleString() };
+    localStorage.setItem(ORDERS_KEY, JSON.stringify(orders));
+  } catch (err) {}
+
+  // হোয়াটসঅ্যাপে একক মেসেজ পাঠানো
+  window.open('https://wa.me/' + WHATSAPP_NUMBER + '?text=' + encodeURIComponent(msg), '_blank');
+
+  localStorage.removeItem(CART_KEY);
+  localStorage.removeItem('pending_order_data');
+
+  showToast('✅ অর্ডার সফলভাবে কনফার্ম হয়েছে!');
+  setTimeout(() => { window.location.href = 'track-order.html?order=' + data.orderId; }, 1800);
+}
