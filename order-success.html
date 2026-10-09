@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0A0A0A">
+  <title>অর্ডার সফল হয়েছে — Loyalty Access Fashion</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .success-card {
+      background: linear-gradient(135deg, rgba(34, 197, 94, 0.08) 0%, rgba(20, 20, 20, 0.95) 100%);
+      border: 1.5px solid rgba(34, 197, 94, 0.35);
+      border-radius: var(--radius);
+      padding: 36px 24px;
+      text-align: center;
+      margin-top: 20px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Animated Green Checkmark SVG */
+    .success-checkmark-wrapper {
+      width: 90px;
+      height: 90px;
+      margin: 0 auto 20px;
+      position: relative;
+    }
+    .checkmark-svg {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      display: block;
+      stroke-width: 3;
+      stroke: #22c55e;
+      stroke-miterlimit: 10;
+      box-shadow: inset 0px 0px 0px #22c55e;
+      animation: fillCheck 0.4s ease-in-out 0.4s forwards, scaleCheck 0.3s ease-in-out 0.9s both;
+    }
+    .checkmark-circle {
+      stroke-dasharray: 166;
+      stroke-dashoffset: 166;
+      stroke-width: 3;
+      stroke-miterlimit: 10;
+      stroke: #22c55e;
+      fill: none;
+      animation: strokeCheck 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+    }
+    .checkmark-check {
+      transform-origin: 50% 50%;
+      stroke-dasharray: 48;
+      stroke-dashoffset: 48;
+      animation: strokeCheck 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards;
+    }
+
+    @keyframes strokeCheck { 100% { stroke-dashoffset: 0; } }
+    @keyframes scaleCheck { 0%, 100% { transform: none; } 50% { transform: scale3d(1.15, 1.15, 1); } }
+    @keyframes fillCheck { 100% { box-shadow: inset 0px 0px 0px 45px rgba(34, 197, 94, 0.15); } }
+
+    /* Fade-In WhatsApp Button */
+    .fade-in-btn {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      visibility: hidden;
+    }
+    .fade-in-btn.show {
+      opacity: 1;
+      transform: translateY(0);
+      visibility: visible;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="announce">⚡ সারা দেশে ক্যাশ অন ডেলিভারি | 📞 WhatsApp: +8801601866686 | ⭐ প্রিমিয়াম কোয়ালিটি গ্যারান্টি</div>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="index.html" class="logo">
+        <span class="logo-main">LOYALTY ACCESS</span>
+        <span class="logo-sub">Luxury Lifestyle Store</span>
+      </a>
+    </div>
+  </header>
+
+  <section class="container section" style="max-width: 650px;">
+    <div class="success-card">
+      
+      <!-- Animated Green Checkmark -->
+      <div class="success-checkmark-wrapper">
+        <svg class="checkmark-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+          <circle class="checkmark-circle" cx="26" cy="26" r="23" fill="none"/>
+          <path class="checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+        </svg>
+      </div>
+
+      <h1 style="color: #fff; font-size: 1.6rem; font-weight: 800; margin-bottom: 8px;">
+        🎉 Congratulations!
+      </h1>
+      <p style="color: var(--gold); font-weight: 700; font-size: 0.95rem; margin-bottom: 16px;">
+        Loyalty Access Fashion থেকে পণ্য ক্রয়ের জন্য আপনাকে অসংখ্য ধন্যবাদ!
+      </p>
+
+      <div style="background: rgba(0,0,0,0.4); border: 1px dashed var(--border); padding: 14px; border-radius: 12px; margin-bottom: 24px; font-size: 0.85rem;">
+        <div>অর্ডার আইডি: <strong id="succOrderId" style="color:var(--gold);">LA-XXXXX</strong></div>
+        <div style="margin-top: 4px;">সর্বমোট বিল: <strong id="succTotal" style="color:#22c55e;">৳ 0</strong></div>
+      </div>
+
+      <!-- Hidden WhatsApp Button (Voiceover শেষে ভেসে উঠবে) -->
+      <div id="waBtnContainer" class="fade-in-btn">
+        <a id="succWaBtn" href="#" target="_blank" class="btn btn-gold btn-block" style="font-size: 1.05rem; padding: 14px; background: #22c55e; color: #000; font-weight: 800; border: none;">
+          💬 WhatsApp-এ দ্রুত অর্ডার কনফার্ম করুন ➔
+        </a>
+      </div>
+
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="footer-bottom">© 2025 Loyalty Access Fashion — All Rights Reserved.</div>
+  </footer>
+
+  <script src="products.js"></script>
+  <script src="orders.js"></script>
+  <script src="main.js"></script>
+  <script>
+    // সাকসেস পেজ সাউন্ড ও ভয়েস লজিক
+    window.addEventListener('DOMContentLoaded', function() {
+      const dataRaw = localStorage.getItem('last_completed_order');
+      if (!dataRaw) {
+        window.location.href = 'index.html';
+        return;
+      }
+
+      const data = JSON.parse(dataRaw);
+      document.getElementById('succOrderId').textContent = data.orderId;
+      document.getElementById('succTotal').textContent = '৳ ' + data.total;
+
+      const waBtn = document.getElementById('succWaBtn');
+      waBtn.href = 'https://wa.me/' + WHATSAPP_NUMBER + '?text=' + encodeURIComponent(data.waMsg);
+
+      // ১. সাকসেস টিউন প্লে করা
+      if (typeof playCelebrationSound === 'function') {
+        playCelebrationSound();
+      }
+
+      // ২. বাংলায় ভয়েস মেসেজ তৈরি ও প্লে করা
+      const speechText = "Congratulation, Loyalty Access Fashion থেকে পণ্য ক্রয়ের জন্য আপনাকে অসংখ্য ধন্যবাদ! অতি শীঘ্রই আমাদের একজন প্রতিনিধি আপনার সাথে যোগাযোগ করবে এছাড়া অর্ডারটি আরও দ্রুত কনফার্ম করতে নিচের বাটনটিতে ক্লিক করুন।";
+
+      let voiceSpoken = false;
+
+      if ('speechSynthesis' in window) {
+        const utterance = new SpeechSynthesisUtterance(speechText);
+        utterance.lang = 'bn-BD';
+        utterance.rate = 0.95; // স্বাভাবিক স্পিড
+
+        utterance.onend = function() {
+          revealWhatsAppButton();
+        };
+
+        utterance.onerror = function() {
+          revealWhatsAppButton();
+        };
+
+        window.speechSynthesis.speak(utterance);
+        voiceSpoken = true;
+      }
+
+      // ব্যাকআপ টাইমার (ভয়েস না কাজ করলে ৬ সেকেন্ড পর বাটন ভেসে উঠবে)
+      setTimeout(function() {
+        revealWhatsAppButton();
+      }, 6500);
+
+      function revealWhatsAppButton() {
+        const container = document.getElementById('waBtnContainer');
+        if (container) {
+          container.classList.add('show');
+        }
+      }
+    });
+  </script>
+</body>
+</html>
