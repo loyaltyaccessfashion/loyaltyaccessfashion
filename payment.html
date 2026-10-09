@@ -37,123 +37,123 @@
       <p>আপনার পছন্দের পেমেন্ট পদ্ধতি সিলেক্ট করুন</p>
     </div>
 
-    <!-- অর্ডার ইনফো বার -->
+    <!-- অর্ডার তথ্য বার -->
     <div class="pay-order-summary-bar">
       <div>
         <span style="color:var(--muted); font-size:0.8rem;">অর্ডার আইডি:</span>
         <strong id="payBarOrderId" style="color:var(--gold);">LA-XXXXX</strong>
       </div>
       <div>
-        <span style="color:var(--muted); font-size:0.8rem;">সর্বমোট পরিশোধযোগ্য:</span>
+        <span style="color:var(--muted); font-size:0.8rem;">সর্বমোট বিল:</span>
         <strong id="payBarTotal" style="color:#22c55e; font-size:1.1rem;">৳ 0</strong>
       </div>
     </div>
 
-    <!-- পেমেন্ট গেটওয়ে সিলেক্টর গ্রিড -->
+    <!-- পেমেন্ট গ্যাং সিলেক্টর ট্যাব -->
     <div class="gateway-tabs">
-      <button class="gateway-tab active" onclick="selectGateway('bkash')">
+      <button class="gateway-tab active" onclick="selectGateway('bkash', this)">
         <span class="gt-dot bkash-dot"></span> bKash (বিকাশ)
       </button>
-      <button class="gateway-tab" onclick="selectGateway('nagad')">
+      <button class="gateway-tab" onclick="selectGateway('nagad', this)">
         <span class="gt-dot nagad-dot"></span> Nagad (নগদ)
       </button>
-      <button class="gateway-tab" onclick="selectGateway('rocket')">
+      <button class="gateway-tab" onclick="selectGateway('rocket', this)">
         <span class="gt-dot rocket-dot"></span> Rocket (রকেট)
       </button>
-      <button class="gateway-tab" onclick="selectGateway('pathao')">
+      <button class="gateway-tab" onclick="selectGateway('pathao', this)">
         <span class="gt-dot pathao-dot"></span> Pathao Pay
       </button>
-      <button class="gateway-tab" onclick="selectGateway('uddoktapay')">
-        <span class="gt-dot uddokta-dot"></span> ⚡ UddoktaPay (অটো)
+      <button class="gateway-tab" onclick="selectGateway('uddoktapay', this)">
+        <span class="gt-dot uddokta-dot"></span> ⚡ UddoktaPay
       </button>
-      <button class="gateway-tab" onclick="selectGateway('cod')">
-        <span class="gt-dot cod-dot"></span> 💵 ক্যাশ অন ডেলিভারি
+      <button class="gateway-tab" onclick="selectGateway('cod', this)">
+        <span class="gt-dot cod-dot"></span> 💵 COD (ক্যাশ)
       </button>
     </div>
 
     <!-- পেমেন্ট কন্টেন্ট প্যানেল -->
     <div class="summary-box" style="margin-top: 20px; position: relative;">
       
-      <!-- ১. বিকাশ প্যানেল -->
+      <!-- ১. বিকাশ -->
       <div id="panel-bkash" class="gateway-panel">
         <div class="panel-header bkash-header">
           <h3>🌸 বিকাশ সেন্ড মানি (Personal)</h3>
         </div>
         <div class="pay-instruction-box">
-          <p>১. আপনার বিকাশ অ্যাপ বা *247# থেকে সেন্ড মানি করুন।</p>
-          <p>২. প্রাপক নম্বর: <strong style="color:var(--gold);">01601866686</strong> 
-             <button class="copy-btn" onclick="copyText('01601866686', 'বিকাশ নম্বর কপি হয়েছে!')">📋 নম্বর কপি</button>
+          <p>১. বিকাশ অ্যাপ বা *247# দিয়ে সেন্ড মানি করুন।</p>
+          <p>২. বিকাশ নম্বর: <strong style="color:var(--gold);">01601866686</strong> 
+             <button class="copy-btn" onclick="copyText('01601866686', 'বিকাশ নম্বর কপি হয়েছে!')">📋 কপি</button>
           </p>
-          <p>৩. টাকা পাঠানোর পর নিচের ঘরে সেন্ডার নম্বর ও TrxID লিখুন।</p>
+          <p>৩. সেন্ড মানি করে নিচে Sender Number ও TrxID লিখুন।</p>
         </div>
       </div>
 
-      <!-- ২. নগদ প্যানেল -->
+      <!-- ২. নগদ -->
       <div id="panel-nagad" class="gateway-panel" style="display:none;">
         <div class="panel-header nagad-header">
           <h3>🍊 নগদ সেন্ড মানি (Personal)</h3>
         </div>
         <div class="pay-instruction-box">
-          <p>১. আপনার নগদ অ্যাপ বা *167# দিয়ে সেন্ড মানি করুন।</p>
-          <p>২. প্রাপক নম্বর: <strong style="color:var(--gold);">01601866686</strong> 
-             <button class="copy-btn" onclick="copyText('01601866686', 'নগদ নম্বর কপি হয়েছে!')">📋 নম্বর কপি</button>
+          <p>১. নগদ অ্যাপ বা *167# দিয়ে সেন্ড মানি করুন।</p>
+          <p>২. নগদ নম্বর: <strong style="color:var(--gold);">01601866686</strong> 
+             <button class="copy-btn" onclick="copyText('01601866686', 'নগদ নম্বর কপি হয়েছে!')">📋 কপি</button>
           </p>
-          <p>৩. টাকা পাঠানোর পর নিচের ঘরে সেন্ডার নম্বর ও TrxID লিখুন।</p>
+          <p>৩. সেন্ড মানি করে নিচে Sender Number ও TrxID লিখুন।</p>
         </div>
       </div>
 
-      <!-- ৩. রকেট প্যানেল -->
+      <!-- ৩. রকেট -->
       <div id="panel-rocket" class="gateway-panel" style="display:none;">
         <div class="panel-header rocket-header">
           <h3>💜 রকেট সেন্ড মানি (Personal)</h3>
         </div>
         <div class="pay-instruction-box">
-          <p>১. আপনার রকেট অ্যাপ বা *322# দিয়ে সেন্ড মানি করুন।</p>
-          <p>২. প্রাপক নম্বর: <strong style="color:var(--gold);">01601866686</strong> 
-             <button class="copy-btn" onclick="copyText('01601866686', 'রকেট নম্বর কপি হয়েছে!')">📋 নম্বর কপি</button>
+          <p>১. রকেট অ্যাপ বা *322# দিয়ে সেন্ড মানি করুন।</p>
+          <p>২. রকেট নম্বর: <strong style="color:var(--gold);">01601866686</strong> 
+             <button class="copy-btn" onclick="copyText('01601866686', 'রকেট নম্বর কপি হয়েছে!')">📋 কপি</button>
           </p>
-          <p>৩. টাকা পাঠানোর পর নিচের ঘরে সেন্ডার নম্বর ও TrxID লিখুন।</p>
+          <p>৩. সেন্ড মানি করে নিচে Sender Number ও TrxID লিখুন।</p>
         </div>
       </div>
 
-      <!-- ৪. পাঠাও পে প্যানেল -->
+      <!-- ৪. পাঠাও পে -->
       <div id="panel-pathao" class="gateway-panel" style="display:none;">
         <div class="panel-header pathao-header">
           <h3>🔴 Pathao Pay পেমেন্ট</h3>
         </div>
         <div class="pay-instruction-box">
-          <p>১. আপনার পাঠাও অ্যাপ থেকে সেন্ড মানি / পে করুন।</p>
-          <p>২. প্রাপক নম্বর: <strong style="color:var(--gold);">01601866686</strong> 
-             <button class="copy-btn" onclick="copyText('01601866686', 'পাঠাও পে নম্বর কপি হয়েছে!')">📋 নম্বর কপি</button>
+          <p>১. পাঠাও অ্যাপ থেকে সেন্ড মানি / পে করুন।</p>
+          <p>২. নম্বর: <strong style="color:var(--gold);">01601866686</strong> 
+             <button class="copy-btn" onclick="copyText('01601866686', 'পাঠাও নম্বর কপি হয়েছে!')">📋 কপি</button>
           </p>
-          <p>৩. টাকা পাঠানোর পর নিচে TrxID লিখে অর্ডার সম্পূর্ণ করুন।</p>
+          <p>৩. টাকা পাঠিয়ে নিচে TrxID লিখে অর্ডার সম্পন্ন করুন।</p>
         </div>
       </div>
 
-      <!-- ৫. উদ্যোক্তাপে প্যানেল -->
+      <!-- ৫. উদ্যোক্তাপে -->
       <div id="panel-uddoktapay" class="gateway-panel" style="display:none;">
         <div class="panel-header uddokta-header">
-          <h3>⚡ UddoktaPay অটোমেটিক পেমেন্ট গেটওয়ে</h3>
+          <h3>⚡ UddoktaPay অটোমেটিক গেটওয়ে</h3>
         </div>
         <div class="pay-instruction-box" style="text-align:center;">
-          <p style="margin-bottom:12px;">নিচের বাটনে ক্লিক করলে UddoktaPay-এর মাধ্যমে বিকাশ, নগদ, রকেট বা কার্ডে অটো পেমেন্ট করতে পারবেন।</p>
+          <p style="margin-bottom:12px;">UddoktaPay-এর মাধ্যমে অটোমেটিক পেমেন্ট করতে নিচের বাটনে চাপুন:</p>
           <a href="https://your-uddoktapay-link.com" target="_blank" class="btn btn-gold btn-block">
             🚀 UddoktaPay দিয়ে অটো পেমেন্ট করুন
           </a>
         </div>
       </div>
 
-      <!-- ৬. ক্যাশ অন ডেলিভারি প্যানেল -->
+      <!-- ৬. ক্যাশ অন ডেলিভারি -->
       <div id="panel-cod" class="gateway-panel" style="display:none;">
         <div class="panel-header cod-header">
           <h3>💵 ক্যাশ অন ডেলিভারি (Cash on Delivery)</h3>
         </div>
         <div class="pay-instruction-box">
-          <p>✅ আপনার কোনো অগ্রিম পেমেন্ট করার প্রয়োজন নেই। পণ্য হাতে পেয়ে সম্পূর্ণ মূল্য পরিশোধ করুন।</p>
+          <p>✅ কোনো অগ্রিম টাকা দেওয়া লাগবে না। পণ্য হাতে পেয়ে সম্পূর্ণ মূল্য পেমেন্ট করুন।</p>
         </div>
       </div>
 
-      <!-- ডায়নামিক ইনপুট ফর্ম (ম্যানুয়াল পেমেন্টের জন্য) -->
+      <!-- ইনপুট ফর্ম (বিকাশ/নগদ/রকেট/পাঠাও এর জন্য) -->
       <form id="finalPaymentForm" onsubmit="completeOrderFinal(event)" style="margin-top:20px;">
         <div id="trxFields">
           <div class="form-group">
@@ -168,7 +168,7 @@
         </div>
 
         <button type="submit" class="btn btn-gold btn-block" style="margin-top:20px; font-size:1.05rem;">
-          ✅ অর্ডার ও পেমেন্ট কনফার্ম করুন (WhatsApp)
+          ✅ ফাইনাল অর্ডার কনফার্ম করুন (WhatsApp)
         </button>
       </form>
 
@@ -186,7 +186,6 @@
         <h4>গুরুত্বপূর্ণ লিংক</h4>
         <ul>
           <li><a href="about.html">About Us</a></li>
-          <li><a href="payment.html">পেমেন্ট পেজ</a></li>
           <li><a href="gift-card.html">Gift Cards</a></li>
           <li><a href="contact.html">Contact Us</a></li>
         </ul>
