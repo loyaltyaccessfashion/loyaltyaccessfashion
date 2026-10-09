@@ -64,18 +64,6 @@
             <option value="outside">ঢাকার বাইরে (৳ 120)</option>
           </select>
         </div>
-
-        <!-- পেমেন্ট বাটন ১: ম্যানুয়াল পেমেন্ট -->
-        <button type="submit" class="btn btn-gold btn-block" style="margin-top:20px;">
-          💳 ম্যানুয়াল পেমেন্ট (বিকাশ/নগদ/COD) ➔
-        </button>
-
-        <div style="text-align: center; margin: 12px 0 6px; font-size: 0.78rem; color: var(--muted);">- অথবা সরাসরি অটো পেমেন্ট -</div>
-
-        <!-- পেমেন্ট বাটন ২: অটো পেমেন্ট -->
-        <button type="button" onclick="goToUddoktaPayStep(event)" class="btn btn-uddokta btn-block">
-          ⚡ উদ্যোক্তাপে (অটো পেমেন্ট করুন) ➔
-        </button>
       </form>
 
       <!-- সামারি ও কুপন বক্স -->
@@ -100,6 +88,17 @@
         <div class="summary-row total"><span>সর্বমোট</span><span id="coTotal">৳ 0</span></div>
       </aside>
     </div>
+    <!-- পেমেন্ট বাটন ১: ম্যানুয়াল পেমেন্ট -->
+        <button type="submit" class="btn btn-gold btn-block" style="margin-top:20px;">
+          💳 ম্যানুয়াল পেমেন্ট (বিকাশ/নগদ/COD) ➔
+        </button>
+
+        <div style="text-align: center; margin: 12px 0 6px; font-size: 0.78rem; color: var(--muted);">- অথবা সরাসরি অটো পেমেন্ট -</div>
+
+        <!-- পেমেন্ট বাটন ২: অটো পেমেন্ট -->
+        <button type="button" onclick="goToUddoktaPayStep(event)" class="btn btn-uddokta btn-block">
+          ⚡ উদ্যোক্তাপে (অটো পেমেন্ট করুন) ➔
+        </button>
   </section>
 
   <footer class="site-footer">
