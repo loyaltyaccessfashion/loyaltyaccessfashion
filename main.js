@@ -608,3 +608,110 @@ function completeUddoktaPayOrder() {
 }
 
 updateCartBadge();
+
+// ==========================================
+// LIVE ORDER TRACKING FUNCTIONALITY
+// ==========================================
+function handleTrackOrder() {
+    const inputVal = document.getElementById('orderSearchInput').value.trim().toUpperCase();
+    const placeholderCard = document.getElementById('trackingPlaceholder');
+    const detailCard = document.getElementById('trackingDetailCard');
+
+    if (!inputVal) {
+        alert("অনুগ্রহ করে আপনার অর্ডার আইডি বা ফোন নম্বর লিখুন!");
+        return;
+    }
+
+    // Play Sound Effect
+    if (typeof playSound === 'function') playSound('click');
+
+    // Fetch Last Completed Order or Mock Database Match
+    const lastOrder = JSON.parse(localStorage.getItem('last_completed_order') || '{}');
+    
+    // Check match with last order or fallback mock status
+    let foundOrder = null;
+
+    if (lastOrder && (lastOrder.orderId === inputVal || (lastOrder.customer && lastOrder.customer.phone.includes(inputVal)))) {
+        foundOrder = lastOrder;
+    } else if (inputVal.includes("LAF") || inputVal.length >= 10) {
+        // Fallback Mock Data for demo tracking
+        foundOrder = {
+            orderId: inputVal.startsWith("#") ? inputVal : `#${inputVal}`,
+            date: new Date().toLocaleDateString('bn-BD'),
+            status: "প্রসেসিং হচ্ছে",
+            step: 2, // Packing stage
+            customer: {
+                name: lastOrder.customer ? lastOrder.customer.name : "সম্মানিত গ্রাহক",
+                phone: inputVal.length >= 10 ? inputVal : "017XXXXXXXX",
+                address: lastOrder.customer ? lastOrder.customer.address : "ঢাকা, বাংলাদেশ",
+                paymentMethod: lastOrder.paymentMethod || "bKash / Nagad"
+            },
+            items: lastOrder.items || [
+                { name: "Luxury Premium Watch / T-Shirt", qty: 1, price: 1450 }
+            ],
+            subtotal: lastOrder.subtotal || 1450,
+            shippingFee: lastOrder.shippingFee || 60,
+            grandTotal: lastOrder.grandTotal || 1510
+        };
+    }
+
+    if (foundOrder) {
+        // Hide placeholder and show dynamic card
+        if (placeholderCard) placeholderCard.style.display = 'none';
+        detailCard.style.display = 'block';
+
+        // Update UI Text
+        document.getElementById('resOrderId').innerText = foundOrder.orderId;
+        document.getElementById('resOrderDate').innerHTML = `<i class="far fa-calendar-alt"></i> ${foundOrder.date || 'আজ'}`;
+        document.getElementById('resStatusBadge').innerText = foundOrder.status || "প্রসেসিং চলছে";
+        
+        document.getElementById('resCustomerName').innerText = foundOrder.customer.name;
+        document.getElementById('resCustomerPhone').innerText = foundOrder.customer.phone;
+        document.getElementById('resDeliveryAddress').innerText = foundOrder.customer.address;
+        document.getElementById('resPaymentMethod').innerText = foundOrder.paymentMethod || "ক্যাশ অন ডেলিভারি";
+
+        // Render Items
+        const itemListContainer = document.getElementById('resItemList');
+        itemListContainer.innerHTML = '';
+        (foundOrder.items || []).forEach(item => {
+            itemListContainer.innerHTML += `
+                <div class="mini-item">
+                    <div class="mini-item-info">
+                        <span class="mini-item-title">${item.name}</span>
+                        <span class="mini-item-qty">পরিমাণ: ${item.qty || 1}টি</span>
+                    </div>
+                    <span class="mini-item-price">৳${item.price}</span>
+                </div>
+            `;
+        });
+
+        // Totals
+        document.getElementById('resSubtotal').innerText = `৳${foundOrder.subtotal || 0}`;
+        document.getElementById('resDeliveryFee').innerText = `৳${foundOrder.shippingFee || 60}`;
+        document.getElementById('resGrandTotal').innerText = `৳${foundOrder.grandTotal || 0}`;
+
+        // Update Progress Stepper
+        updateStepper(foundOrder.step || 2);
+
+        // Smooth Scroll to Result
+        detailCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    } else {
+        alert("কোনো অর্ডার পাওয়া যায়নি! সঠিক অর্ডার নম্বর অথবা ফোন নম্বর দিন।");
+    }
+}
+
+// Stepper Helper
+function updateStepper(activeStep) {
+    for (let i = 1; i <= 4; i++) {
+        const stepEl = document.getElementById(`step${i}`);
+        if (!stepEl) continue;
+        
+        stepEl.classList.remove('completed', 'active');
+        if (i < activeStep) {
+            stepEl.classList.add('completed');
+        } else if (i === activeStep) {
+            stepEl.classList.add('active');
+        }
+    }
+}
