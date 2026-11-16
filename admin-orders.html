@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0a0a0a">
+    <meta name="robots" content="noindex, nofollow">
+
+    <title>Order Management | Loyalty Access Fashion</title>
+
+    <link rel="stylesheet" href="order-portal.css">
+    <script type="module" src="order-portal.js"></script>
+</head>
+
+<body class="op-page" data-portal="admin">
+    <div class="op-wrap">
+
+        <header class="op-header">
+            <a href="index.html" class="op-brand">
+                <span class="op-mark" aria-hidden="true">LAF</span>
+                <span>
+                    <strong>LOYALTY ACCESS</strong>
+                    <small>ORDER MANAGEMENT</small>
+                </span>
+            </a>
+
+            <a href="index.html" class="op-home" data-home-link>
+                ← হোমে ফিরুন
+            </a>
+        </header>
+
+        <main>
+            <section class="op-intro">
+                <p class="op-eyebrow">PRIVATE / STORE ADMIN</p>
+                <h1>আপনার অর্ডার কন্ট্রোল সেন্টার।</h1>
+                <p>অর্ডার যোগ করুন, খুঁজুন এবং এক ক্লিকে পরের স্ট্যাটাসে নিন।</p>
+            </section>
+
+            <p id="opMessage" class="op-message" role="status" aria-live="polite"></p>
+
+            <section id="opLogin" class="op-panel op-login">
+                <h2>Admin sign in</h2>
+                <p class="op-subtext">শুধুমাত্র অনুমোদিত store admin-এর জন্য।</p>
+
+                <form id="opLoginForm" method="post">
+                    <div class="op-field">
+                        <label for="opEmail">ইমেইল</label>
+                        <input id="opEmail" class="op-input" type="email" autocomplete="username" required>
+                    </div>
+
+                    <div class="op-field">
+                        <label for="opPassword">পাসওয়ার্ড</label>
+                        <input id="opPassword" class="op-input" type="password" autocomplete="current-password" required>
+                    </div>
+
+                    <button id="opLoginButton" class="op-btn op-wide" type="submit" disabled>
+                        নিরাপদে লগইন করুন →
+                    </button>
+                </form>
+            </section>
+
+            <section id="opDashboard" hidden>
+                <div class="op-dashboard-head">
+                    <div>
+                        <h2>Order workspace</h2>
+                        <p id="opOwner" class="op-note"></p>
+                    </div>
+
+                    <button id="opLogout" class="op-btn op-secondary" type="button">Log out</button>
+                </div>
+
+                <details class="op-panel op-add">
+                    <summary>＋ নতুন অর্ডার যুক্ত করুন</summary>
+                    <p class="op-note">নতুন অর্ডার স্বয়ংক্রিয়ভাবে Order Pending অবস্থায় যুক্ত হবে।</p>
+
+                    <form id="opAddForm" method="post">
+                        <div class="op-form-grid">
+                            <div class="op-field">
+                                <label for="opNewId">অর্ডার আইডি</label>
+                                <input id="opNewId" class="op-input" placeholder="যেমন: LAF-1001" minlength="3" maxlength="64" autocomplete="off" required>
+                            </div>
+
+                            <div class="op-field">
+                                <label for="opNewPhone">গ্রাহকের মোবাইল নম্বর</label>
+                                <input id="opNewPhone" class="op-input" type="tel" placeholder="01XXXXXXXXX" maxlength="32" required>
+                            </div>
+                        </div>
+
+                        <div class="op-field">
+                            <label for="opNewLabel">পণ্য / নিজের নোট — শুধু Admin দেখবেন</label>
+                            <input id="opNewLabel" class="op-input" placeholder="যেমন: Anime T-Shirt × 2 / Size L" maxlength="180">
+                        </div>
+
+                        <button id="opAddButton" type="submit" class="op-btn op-wide">অর্ডার যুক্ত করুন</button>
+                    </form>
+                </details>
+
+                <div class="op-toolbar">
+                    <input id="opSearch" class="op-input" placeholder="অর্ডার আইডি, ফোন বা নোট দিয়ে খুঁজুন" aria-label="অর্ডার খুঁজুন">
+                    <select id="opFilter" class="op-select" aria-label="স্ট্যাটাস ফিল্টার">
+                        <option value="all">সব স্ট্যাটাস</option>
+                    </select>
+                    <button id="opReload" class="op-btn op-secondary" type="button">↻ Refresh</button>
+                </div>
+
+                <p id="opCount" class="op-note"></p>
+                <div id="opOrders" class="op-order-list"></div>
+            </section>
+        </main>
+
+        <footer class="op-footer">
+            <span>Loyalty Access Fashion · Admin workspace</span>
+            <a href="track-order.html">Customer tracking page ↗</a>
+        </footer>
+    </div>
+</body>
+</html>
