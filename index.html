@@ -51,35 +51,44 @@
   <section class="container section-sm">
     <div class="feature-strip">
       
-      <!-- ১. ডেলিভারি কার্ড -->
-      <div class="feature-card-glow" onclick="openFeatureModal('delivery')">
-        <span class="icon">🚚</span>
-        <div style="width: 100%;">
-          <h4>সারাদেশে ডেলিভারি <span class="arrow-click">➔</span></h4>
-          <p>ঢাকায় ১-২ দিন, বাইরে ২-৪ দিন</p>
-        </div>
-      </div>
+<section class="svc-home-grid" aria-label="আমাদের কাস্টমার সার্ভিস">
 
-      <!-- ২. ক্যাশ অন ডেলিভারি কার্ড -->
-      <div class="feature-card-glow" onclick="openFeatureModal('cod')">
-        <span class="icon">💵</span>
-        <div style="width: 100%;">
-          <h4>ক্যাশ অন ডেলিভারি <span class="arrow-click">➔</span></h4>
-          <p>পণ্য হাতে পেয়ে টাকা দিন</p>
-        </div>
-      </div>
+    <a href="delivery.html" class="svc-home-card svc-glow">
+        <span class="svc-home-icon" aria-hidden="true">🚚</span>
 
-      <!-- ৩. ইজি এক্সচেঞ্জ কার্ড -->
-      <div class="feature-card-glow" onclick="openFeatureModal('exchange')">
-        <span class="icon">🔄</span>
-        <div style="width: 100%;">
-          <h4>ইজি এক্সচেঞ্জ <span class="arrow-click">➔</span></h4>
-          <p>সমস্যা থাকলে ২৪ ঘণ্টায় বদলে দেব</p>
-        </div>
-      </div>
+        <span class="svc-home-copy">
+            <strong>সারাদেশে ডেলিভারি</strong>
+            <small>ঢাকায় ১–২, বাইরে ২–৪ কর্মদিবস*</small>
+        </span>
 
-    </div>
-  </section>
+        <span class="svc-home-arrow" aria-hidden="true">→</span>
+    </a>
+
+    <a href="cash-on-delivery.html" class="svc-home-card svc-glow">
+        <span class="svc-home-icon" aria-hidden="true">💵</span>
+
+        <span class="svc-home-copy">
+            <strong>ক্যাশ অন ডেলিভারি</strong>
+            <small>প্রযোজ্য অর্ডারে ডেলিভারির সময় পেমেন্ট</small>
+        </span>
+
+        <span class="svc-home-arrow" aria-hidden="true">→</span>
+    </a>
+
+    <a href="easy-exchange.html" class="svc-home-card svc-glow">
+        <span class="svc-home-icon" aria-hidden="true">🔄</span>
+
+        <span class="svc-home-copy">
+            <strong>ইজি এক্সচেঞ্জ</strong>
+            <small>পণ্য পাওয়ার ২৪ ঘণ্টার মধ্যে সমস্যা জানান</small>
+        </span>
+
+        <span class="svc-home-arrow" aria-hidden="true">→</span>
+    </a>
+
+</section>
+
+  
 
   <!-- ফিচার ক্লিক ইন্টারেক্টিভ পপ-আপ মোডাল -->
   <div id="featureModalOverlay" class="feature-modal-overlay" onclick="closeFeatureModal(event)">
